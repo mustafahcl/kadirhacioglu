@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07090d">
+<title>Merhaba, Kadir BABA</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+margin:0;
+min-height:100vh;
+background:radial-gradient(circle at 50% -10%,#202733 0,#0b0e13 42%,#050609 100%);
+color:#f5f7fa;
+font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Arial,sans-serif;
+padding:18px
+}
+
+.container{max-width:760px;margin:auto}
+
+.top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:10px 2px 22px
+}
+
+.logo{
+font-size:22px;
+font-weight:800;
+letter-spacing:-.7px
+}
+
+.badge{
+font-size:11px;
+color:#75e69a;
+background:#102219;
+border:1px solid #214b31;
+border-radius:99px;
+padding:7px 10px
+}
+
+.card{
+background:rgba(17,21,27,.92);
+border:1px solid #272e38;
+border-radius:25px;
+padding:24px;
+margin-bottom:14px;
+box-shadow:0 18px 55px rgba(0,0,0,.28);
+backdrop-filter:blur(14px)
+}
+
+.eyebrow,.label{
+color:#818b99;
+font-size:12px
+}
+
+.fund{
+font-size:34px;
+font-weight:850;
+letter-spacing:-1.2px;
+margin:5px 0 18px
+}
+
+.price{
+font-size:38px;
+font-weight:850;
+letter-spacing:-1.5px
+}
+
+.status{
+margin-top:8px;
+color:#6fda91;
+font-size:12px;
+min-height:16px
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+margin-top:14px
+}
+
+.box{
+background:rgba(17,21,27,.9);
+border:1px solid #272e38;
+border-radius:19px;
+padding:17px
+}
+
+.number{
+font-size:19px;
+font-weight:750;
+margin-top:8px
+}
+
+.profit{color:#6fdf94}
+.loss{color:#ff7070}
+
+.form h2{
+font-size:20px;
+margin:0 0 6px
+}
+
+.form p{
+color:#7f8996;
+font-size:13px;
+margin:0 0 20px;
+line-height:1.5
+}
+
+label{
+display:block;
+margin:14px 0 7px
+}
+
+input{
+width:100%;
+padding:15px 14px;
+background:#090c11;
+border:1px solid #303844;
+border-radius:12px;
+color:#fff;
+font-size:16px;
+outline:none
+}
+
+input:focus{border-color:#647080}
+
+button{
+width:100%;
+margin-top:18px;
+padding:15px;
+border:0;
+border-radius:12px;
+background:#f5f6f8;
+color:#08090b;
+font-size:15px;
+font-weight:800
+}
+
+button.secondary{
+background:#151a21;
+color:#d7dce3;
+border:1px solid #2d3540;
+margin-top:9px
+}
+
+.hidden{display:none}
+
+.edit{
+color:#aeb6c1;
+font-size:12px;
+text-decoration:underline;
+margin:8px 0 20px;
+text-align:center;
+cursor:pointer
+}
+
+.saved{
+color:#70df95;
+text-align:center;
+font-size:12px;
+margin-top:11px;
+min-height:16px
+}
+
+.total{
+border:1px solid #303844;
+background:rgba(20,25,32,.96)
+}
+
+.total .big{
+font-size:30px;
+font-weight:850;
+margin-top:7px
+}
+
+.muted{
+color:#6e7784;
+font-size:11px;
+margin-top:8px
+}
+
+footer{
+text-align:center;
+color:#58616d;
+font-size:11px;
+padding:18px
+}
+
+@media(max-width:520px){
+body{padding:13px}
+.card{padding:20px;border-radius:22px}
+.price{font-size:32px}
+.fund{font-size:30px}
+.number{font-size:18px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<header class="top">
+<div class="logo">Mustafa Hacıoğlu</div>
+<div class="badge">● by MHC</div>
+</header>
+
+
+<!-- TLY -->
+
+<section class="card">
+
+<div class="eyebrow">Yatırım Fonu</div>
+
+<div class="fund">TLY</div>
+
+<div class="label">Güncel Fon Fiyatı</div>
+
+<div class="price" id="tlyPrice">
+Yükleniyor…
+</div>
+
+<div class="status" id="tlyStatus">
+TEFAS verisi alınıyor…
+</div>
+
+<div class="grid">
+
+<div class="box">
+<div class="label">Fon Adedi</div>
+<div class="number" id="tlyQty">—</div>
+</div>
+
+<div class="box">
+<div class="label">Ortalama Alış</div>
+<div class="number" id="tlyBuy">—</div>
+</div>
+
+<div class="box">
+<div class="label">Toplam Maliyet</div>
+<div class="number" id="tlyCost">—</div>
+</div>
+
+<div class="box">
+<div class="label">Güncel Değer</div>
+<div class="number" id="tlyValue">—</div>
+</div>
+
+<div class="box">
+<div class="label">Kâr / Zarar</div>
+<div class="number" id="tlyProfit">—</div>
+</div>
+
+<div class="box">
+<div class="label">Toplam Getiri</div>
+<div class="number" id="tlyReturn">—</div>
+</div>
+
+</div>
+
+</section>
+
+
+<!-- THF -->
+
+<section class="card">
+
+<div class="eyebrow">Yatırım Fonu</div>
+
+<div class="fund">THF</div>
+
+<div class="label">Güncel Fon Fiyatı</div>
+
+<div class="price" id="thfPrice">
+Yükleniyor…
+</div>
+
+<div class="status" id="thfStatus">
+TEFAS verisi alınıyor…
+</div>
+
+<div class="grid">
+
+<div class="box">
+<div class="label">Fon Adedi</div>
+<div class="number" id="thfQty">—</div>
+</div>
+
+<div class="box">
+<div class="label">Ortalama Alış</div>
+<div class="number" id="thfBuy">—</div>
+</div>
+
+<div class="box">
+<div class="label">Toplam Maliyet</div>
+<div class="number" id="thfCost">—</div>
+</div>
+
+<div class="box">
+<div class="label">Güncel Değer</div>
+<div class="number" id="thfValue">—</div>
+</div>
+
+<div class="box">
+<div class="label">Kâr / Zarar</div>
+<div class="number" id="thfProfit">—</div>
+</div>
+
+<div class="box">
+<div class="label">Toplam Getiri</div>
+<div class="number" id="thfReturn">—</div>
+</div>
+
+</div>
+
+</section>
+
+
+<!-- TOPLAM -->
+
+<section class="card total">
+
+<div class="label">
+TOPLAM PORTFÖY
+</div>
+
+<div class="big" id="totalValue">
+—
+</div>
+
+<div class="muted" id="totalProfit">
+Toplam kâr / zarar: —
+</div>
+
+</section>
+
+
+<!-- FORM -->
+
+<section id="formCard" class="card form">
+
+<h2>Portföyünü Oluştur</h2>
+
+<p>
+TLY ve THF için adet ve ortalama alış fiyatını ayrı ayrı gir.
+Bilgilerin bu cihazda kaydedilir.
+</p>
+
+
+<label class="label">
+TLY Fon Adedi
+</label>
+
+<input
+id="tlyQuantityInput"
+type="number"
+min="0"
+step="0.0001"
+placeholder="Örn. 30"
+>
+
+
+<label class="label">
+TLY Ortalama Alış (TL)
+</label>
+
+<input
+id="tlyBuyInput"
+type="number"
+min="0"
+step="0.00001"
+placeholder="Örn. 1260"
+>
+
+
+<label class="label">
+THF Fon Adedi
+</label>
+
+<input
+id="thfQuantityInput"
+type="number"
+min="0"
+step="0.0001"
+placeholder="Örn. 100"
+>
+
+
+<label class="label">
+THF Ortalama Alış (TL)
+</label>
+
+<input
+id="thfBuyInput"
+type="number"
+min="0"
+step="0.00001"
+placeholder="Örn. 500"
+>
+
+
+<button onclick="savePortfolio()">
+Portföyü Kaydet
+</button>
+
+<button
+class="secondary"
+onclick="resetPortfolio()"
+>
+Bilgileri Sıfırla
+</button>
+
+<div
+class="saved"
+id="saveStatus"
+></div>
+
+</section>
+
+
+<div
+id="editButton"
+class="edit hidden"
+onclick="showForm()"
+>
+Portföy bilgilerini düzenle
+</div>
+
+
+<footer>
+TLY + THF Portföy Takip Sistemi · TEFAS verisi
+</footer>
+
+</div>
+
+
+<script>
+
+const KEY="fonPortfolio";
+
+let prices={
+TLY:0,
+THF:0
+};
+
+const $=id=>document.getElementById(id);
+
+
+function tl(v){
+
+return Number(v).toLocaleString(
+"tr-TR",
+{
+minimumFractionDigits:2,
+maximumFractionDigits:2
+}
+)+" TL";
+
+}
+
+
+function pct(v){
+
+return (v>=0?"+":"")+
+Number(v).toLocaleString(
+"tr-TR",
+{
+minimumFractionDigits:2,
+maximumFractionDigits:2
+}
+)+"%";
+
+}
+
+
+function qty(v){
+
+return Number(v).toLocaleString(
+"tr-TR",
+{
+maximumFractionDigits:4
+}
+);
+
+}
+
+
+function getPortfolio(){
+
+try{
+
+return JSON.parse(
+localStorage.getItem(KEY)
+);
+
+}catch(e){
+
+return null;
+
+}
+
+}
+
+
+function renderFund(code){
+
+const p=getPortfolio();
+
+if(!p)return;
+
+const x=p[code.toLowerCase()]||
+{
+quantity:0,
+buy:0
+};
+
+const q=Number(x.quantity)||0;
+
+const b=Number(x.buy)||0;
+
+const price=prices[code];
+
+const prefix=code.toLowerCase();
+
+
+$(`${prefix}Qty`).textContent=qty(q);
+
+$(`${prefix}Buy`).textContent=
+b?tl(b):"—";
+
+
+if(price>0){
+
+const cost=q*b;
+
+const value=q*price;
+
+const profit=value-cost;
+
+const ret=
+cost?
+(profit/cost)*100:
+0;
+
+
+$(`${prefix}Cost`).textContent=
+tl(cost);
+
+$(`${prefix}Value`).textContent=
+tl(value);
+
+$(`${prefix}Profit`).textContent=
+(profit>=0?"+":"")+tl(profit);
+
+$(`${prefix}Return`).textContent=
+pct(ret);
+
+
+[$(`${prefix}Profit`),
+$(`${prefix}Return`)]
+.forEach(el=>{
+
+el.className=
+"number "+
+(profit>=0?"profit":"loss");
+
+});
+
+}
+
+}
+
+
+function render(){
+
+const p=getPortfolio();
+
+if(!p){
+
+$("formCard").classList.remove("hidden");
+
+$("editButton").classList.add("hidden");
+
+return;
+
+}
+
+
+$("formCard").classList.add("hidden");
+
+$("editButton").classList.remove("hidden");
+
+
+renderFund("TLY");
+
+renderFund("THF");
+
+
+let totalValue=0;
+
+let totalCost=0;
+
+
+for(
+const code of ["TLY","THF"]
+){
+
+const x=
+p[code.toLowerCase()]||{};
+
+const q=
+Number(x.quantity)||0;
+
+const b=
+Number(x.buy)||0;
+
+
+totalCost+=q*b;
+
+
+if(prices[code]>0){
+
+totalValue+=
+q*prices[code];
+
+}
+
+}
+
+
+if(totalValue>0){
+
+$("totalValue").textContent=
+tl(totalValue);
+
+
+const totalProfit=
+totalValue-totalCost;
+
+
+$("totalProfit").textContent=
+"Toplam kâr / zarar: "+
+(totalProfit>=0?"+":"")+
+tl(totalProfit);
+
+
+$("totalProfit").className=
+"muted "+
+(totalProfit>=0?"profit":"loss");
+
+}
+
+}
+
+
+function savePortfolio(){
+
+const tq=
+Number(
+$("tlyQuantityInput").value
+)||0;
+
+const tb=
+Number(
+$("tlyBuyInput").value
+)||0;
+
+
+const hq=
+Number(
+$("thfQuantityInput").value
+)||0;
+
+const hb=
+Number(
+$("thfBuyInput").value
+)||0;
+
+
+if(
+(tq>0&&tb<=0)||
+(hq>0&&hb<=0)||
+(tq<=0&&hq<=0)
+){
+
+$("saveStatus").textContent=
+"En az bir fon için adet ve alış fiyatını gir.";
+
+return;
+
+}
+
+
+localStorage.setItem(
+KEY,
+JSON.stringify({
+
+tly:{
+quantity:tq,
+buy:tb
+},
+
+thf:{
+quantity:hq,
+buy:hb
+}
+
+})
+);
+
+
+$("saveStatus").textContent=
+"Portföy kaydedildi.";
+
+render();
+
+}
+
+
+function showForm(){
+
+const p=getPortfolio();
+
+
+if(p){
+
+const t=p.tly||{};
+
+const h=p.thf||{};
+
+
+$("tlyQuantityInput").value=
+t.quantity||"";
+
+$("tlyBuyInput").value=
+t.buy||"";
+
+
+$("thfQuantityInput").value=
+h.quantity||"";
+
+$("thfBuyInput").value=
+h.buy||"";
+
+}
+
+
+$("formCard").classList.remove("hidden");
+
+$("editButton").classList.add("hidden");
+
+}
+
+
+function resetPortfolio(){
+
+localStorage.removeItem(KEY);
+
+
+[
+"tlyQuantityInput",
+"tlyBuyInput",
+"thfQuantityInput",
+"thfBuyInput"
+]
+.forEach(id=>{
+
+$(id).value="";
+
+});
+
+
+$("saveStatus").textContent=
+"Portföy bilgileri sıfırlandı.";
+
+render();
+
+}
+
+
+async function loadFund(code){
+
+try{
+
+const r=
+await fetch(
+`${code.toLowerCase()}.json?nocache=${Date.now()}`,
+{
+cache:"no-store"
+}
+);
+
+
+if(!r.ok)
+throw Error();
+
+
+const d=
+await r.json();
+
+
+const price=
+Number(d.fiyat);
+
+
+if(
+!Number.isFinite(price)||
+price<=0
+)
+throw Error();
+
+
+prices[code]=price;
+
+
+const prefix=
+code.toLowerCase();
+
+
+$(`${prefix}Price`).textContent=
+tl(price);
+
+
+$(`${prefix}Status`).textContent=
+"TEFAS · "+
+(d.tarih||"Güncel")+
+(
+d.gunlukGetiri!=null
+?
+" · Günlük "+
+pct(Number(d.gunlukGetiri))
+:
+""
+);
+
+
+}catch(e){
+
+const prefix=
+code.toLowerCase();
+
+
+$(`${prefix}Price`).textContent=
+"Veri bekleniyor";
+
+
+$(`${prefix}Status`).textContent=
+"TEFAS verisi henüz oluşturulmadı. GitHub Actions çalıştırılmalı.";
+
+}
+
+
+render();
+
+}
+
+
+render();
+
+loadFund("TLY");
+
+loadFund("THF");
+
+</script>
+
+</body>
+</html>
