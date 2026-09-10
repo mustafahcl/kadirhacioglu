@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080808">
+<title>Fon Portföy</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#080808;color:#f5f5f5;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}.wrap{max-width:720px;margin:auto;padding:22px 16px 40px}.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}.title{font-size:24px;font-weight:800;letter-spacing:-.7px}.badge{font-size:10px;color:#9d9d9d;border:1px solid #292929;border-radius:20px;padding:7px 10px}.badge i{color:#52d273;font-style:normal}.hero{background:linear-gradient(145deg,#151515,#0d0d0d);border:1px solid #242424;border-radius:22px;padding:22px;margin-bottom:14px}.label{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:1.2px}.total{font-size:38px;font-weight:800;letter-spacing:-1.5px;margin:6px 0 12px}.day{font-size:14px;font-weight:700}.positive{color:#55d47a}.negative{color:#ff6565}.muted{color:#777}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}.stat{background:#111;border:1px solid #202020;border-radius:15px;padding:14px}.stat .v{font-size:17px;font-weight:700;margin-top:5px}.card{background:#111;border:1px solid #232323;border-radius:20px;padding:18px;margin-top:12px}.cardtop{display:flex;justify-content:space-between;align-items:center}.fund{font-size:23px;font-weight:800}.price{text-align:right}.price small{display:block;color:#777;font-size:10px}.price strong{font-size:17px}.rows{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:17px}.row{background:#0b0b0b;border-radius:13px;padding:12px}.row span{display:block;color:#777;font-size:10px;text-transform:uppercase;letter-spacing:.7px}.row b{display:block;margin-top:4px;font-size:15px}.form{background:#111;border:1px solid #232323;border-radius:20px;padding:18px;margin-top:14px}.form h2{font-size:16px;margin:0 0 14px}.inputs{display:grid;grid-template-columns:1fr 1fr;gap:10px}.inputbox label{display:block;font-size:10px;color:#777;margin-bottom:6px}.inputbox input{width:100%;background:#080808;border:1px solid #292929;color:#fff;border-radius:11px;padding:12px;font-size:14px;outline:none}.save{width:100%;margin-top:12px;border:0;border-radius:12px;padding:13px;background:#fff;color:#000;font-weight:800;cursor:pointer}.reset{width:100%;margin-top:8px;border:1px solid #292929;border-radius:12px;padding:11px;background:#111;color:#aaa;cursor:pointer}.updated{text-align:center;color:#666;font-size:10px;margin-top:18px}@media(max-width:480px){.total{font-size:32px}.grid,.rows,.inputs{grid-template-columns:1fr 1fr}.wrap{padding:18px 12px 35px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head"><div class="title">FON PORTFÖY</div><div class="badge"><i>●</i> TEFAS TAKİP</div></div>
+
+  <section class="hero">
+    <div class="label">Toplam Portföy Tutarı</div>
+    <div class="total" id="totalValue">₺0,00</div>
+    <div class="day" id="dailyChange">Günlük değişim hesaplanıyor...</div>
+    <div class="grid">
+      <div class="stat"><div class="label">Toplam Maliyet</div><div class="v" id="totalCost">₺0,00</div></div>
+      <div class="stat"><div class="label">Toplam Kâr / Zarar</div><div class="v" id="totalProfit">₺0,00</div></div>
+    </div>
+  </section>
+
+  <div id="funds"></div>
+
+  <section class="form">
+    <h2>Portföy Bilgileri</h2>
+    <div class="inputs">
+      <div class="inputbox"><label>TLY ADET</label><input id="tlyQty" type="number" step="any" min="0" placeholder="Örn. 30"></div>
+      <div class="inputbox"><label>TLY ORT. ALIŞ</label><input id="tlyAvg" type="number" step="any" min="0" placeholder="Örn. 8500"></div>
+      <div class="inputbox"><label>THF ADET</label><input id="thfQty" type="number" step="any" min="0" placeholder="Örn. 15"></div>
+      <div class="inputbox"><label>THF ORT. ALIŞ</label><input id="thfAvg" type="number" step="any" min="0" placeholder="Örn. 1200"></div>
+    </div>
+    <button class="save" onclick="savePortfolio()">PORTFÖYÜ KAYDET</button>
+    <button class="reset" onclick="resetPortfolio()">Bilgileri Sıfırla</button>
+  </section>
+
+  <div class="updated" id="updated">TEFAS verileri yükleniyor...</div>
+</div>
+<script>
+const state={TLY:{fiyat:null,tarih:null,gunlukGetiri:null},THF:{fiyat:null,tarih:null,gunlukGetiri:null}};
+const defaults={TLY:{qty:0,avg:0},THF:{qty:0,avg:0}};
+function money(n){return new Intl.NumberFormat('tr-TR',{style:'currency',currency:'TRY',minimumFractionDigits:2,maximumFractionDigits:2}).format(Number(n)||0)}
+function num(n){return Number(n)||0}
+function pct(n){return (num(n)>=0?'+':'')+num(n).toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2})+'%'}
+function loadInputs(){let p=JSON.parse(localStorage.getItem('fonPortfolio')||'null')||defaults;['TLY','THF'].forEach(f=>{document.getElementById(f.toLowerCase()+'Qty').value=p[f]?.qty??0;document.getElementById(f.toLowerCase()+'Avg').value=p[f]?.avg??0})}
+function savePortfolio(){let p={TLY:{qty:num(document.getElementById('tlyQty').value),avg:num(document.getElementById('tlyAvg').value)},THF:{qty:num(document.getElementById('thfQty').value),avg:num(document.getElementById('thfAvg').value)}};localStorage.setItem('fonPortfolio',JSON.stringify(p));render();}
+function resetPortfolio(){localStorage.removeItem('fonPortfolio');loadInputs();render()}
+function render(){let p=JSON.parse(localStorage.getItem('fonPortfolio')||'null')||defaults;let total=0,cost=0,daily=0;let html='';['TLY','THF'].forEach(f=>{let d=state[f],qty=num(p[f]?.qty),avg=num(p[f]?.avg),price=num(d.fiyat),value=qty*price,c=qty*avg,profit=value-c,dr=num(d.gunlukGetiri),dailyValue=value*dr/100;total+=value;cost+=c;daily+=dailyValue;html+=`<section class="card"><div class="cardtop"><div class="fund">${f}</div><div class="price"><small>GÜNCEL FİYAT</small><strong>${d.fiyat==null?'—':money(price)}</strong></div></div><div class="rows"><div class="row"><span>Adet</span><b>${qty.toLocaleString('tr-TR')}</b></div><div class="row"><span>Toplam Değer</span><b>${money(value)}</b></div><div class="row"><span>Ort. Alış</span><b>${money(avg)}</b></div><div class="row"><span>Kâr / Zarar</span><b class="${profit>=0?'positive':'negative'}">${profit>=0?'+':''}${money(profit)}</b></div><div class="row"><span>Günlük Değişim</span><b class="${dailyValue>=0?'positive':'negative'}">${dailyValue>=0?'+':''}${money(dailyValue)}</b></div><div class="row"><span>Getiri</span><b class="${profit>=0?'positive':'negative'}">${c>0?pct(profit/c*100):'—'}</b></div></div></section>`});document.getElementById('funds').innerHTML=html;document.getElementById('totalValue').textContent=money(total);document.getElementById('totalCost').textContent=money(cost);let tp=total-cost;let pe=cost>0?tp/cost*100:0;let pt=document.getElementById('totalProfit');pt.textContent=(tp>=0?'+':'')+money(tp);pt.className='v '+(tp>=0?'positive':'negative');let dc=document.getElementById('dailyChange');dc.textContent='Günlük değişim: '+(daily>=0?'+':'')+money(daily);dc.className='day '+(daily>=0?'positive':'negative');let dailyPct=total>0?daily/total*100:0;dc.textContent+='  ('+pct(dailyPct)+')';}
+async function fetchFund(code){try{let r=await fetch(code.toLowerCase()+'.json?nocache='+Date.now());if(!r.ok)throw new Error('HTTP '+r.status);let d=await r.json();state[code]=d;return true}catch(e){console.error(code,e);return false}}
+async function init(){loadInputs();let results=await Promise.all(['TLY','THF'].map(fetchFund));render();let dates=[state.TLY.tarih,state.THF.tarih].filter(Boolean);document.getElementById('updated').textContent=results.some(Boolean)?'Son TEFAS tarihi: '+(dates.sort().pop()||'—'):'TEFAS verileri alınamadı';}
+init();
+</script>
+</body>
+</html>
