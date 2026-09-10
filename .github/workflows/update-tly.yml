@@ -1,0 +1,213 @@
+name: TLY + THF Fiyat Güncelle
+
+on:
+  workflow_dispatch:
+
+  schedule:
+    - cron: "30 18 * * 1-5"
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Repoyu indir
+        uses: actions/checkout@v5
+
+      - name: Python kurulumu
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: TEFAS istemcisini kur
+        run: |
+          python -m pip install --upgrade pip
+          pip install --no-cache-dir tefasmak==1.0.1
+
+      - name: TLY ve THF verilerini TEFAS'tan çek
+        env:
+          PYTHONUNBUFFERED: "1"
+
+        run: |
+
+          python - <<'PY'
+
+          import json
+          import time
+
+          from datetime import datetime, timezone
+
+          from tefasmak import fon_son_fiyat_ve_getiri
+
+
+          funds = [
+              "TLY",
+              "THF"
+          ]
+
+
+          for code in funds:
+
+              print(f"TEFAS'tan {code} verisi alınıyor...")
+
+              last_error = None
+              info = None
+
+
+              for attempt in range(1, 4):
+
+                  try:
+
+                      info = fon_son_fiyat_ve_getiri(code)
+
+                      print(f"{code} cevabı: {info}")
+
+
+                      # tefasmak tuple döndürüyor:
+                      # (fiyat, gunlukGetiri, tarih)
+
+                      if (
+                          isinstance(info, tuple)
+                          and len(info) >= 3
+                      ):
+
+                          fiyat = info[0]
+                          gunluk_getiri = info[1]
+                          tarih = info[2]
+
+                          if fiyat is not None:
+                              break
+
+
+                      # Olası dict formatı için de destek
+                      elif isinstance(info, dict):
+
+                          fiyat = (
+                              info.get("fiyat")
+                              or info.get("sonFiyat")
+                          )
+
+                          gunluk_getiri = (
+                              info.get("gunlukGetiri")
+                          )
+
+                          tarih = (
+                              info.get("tarih")
+                              or datetime.now().strftime(
+                                  "%Y-%m-%d"
+                              )
+                          )
+
+                          if fiyat is not None:
+                              break
+
+
+                      raise RuntimeError(
+                          f"{code} için geçerli veri formatı alınamadı"
+                      )
+
+
+                  except Exception as exc:
+
+                      last_error = exc
+
+                      print(
+                          f"{code} deneme {attempt} başarısız: {exc}"
+                      )
+
+
+                  if attempt < 3:
+                      time.sleep(10)
+
+
+              if (
+                  info is None
+                  or fiyat is None
+              ):
+
+                  raise RuntimeError(
+                      f"{code} fiyatı TEFAS'tan alınamadı: "
+                      f"{last_error}"
+                  )
+
+
+              output = {
+
+                  "fon": code,
+
+                  "fiyat": float(fiyat),
+
+                  "tarih": str(tarih),
+
+                  "gunlukGetiri": (
+                      float(gunluk_getiri)
+                      if gunluk_getiri is not None
+                      else None
+                  ),
+
+                  "kaynak": "TEFAS",
+
+                  "guncelleme":
+                      datetime.now(
+                          timezone.utc
+                      ).isoformat()
+
+              }
+
+
+              with open(
+                  f"{code.lower()}.json",
+                  "w",
+                  encoding="utf-8"
+              ) as f:
+
+                  json.dump(
+                      output,
+                      f,
+                      ensure_ascii=False,
+                      indent=2
+                  )
+
+
+              print(
+                  f"{code} başarıyla kaydedildi:"
+              )
+
+              print(
+                  json.dumps(
+                      output,
+                      ensure_ascii=False,
+                      indent=2
+                  )
+              )
+
+          PY
+
+
+      - name: Değişiklikleri kaydet
+        run: |
+
+          git config user.name "TLY THF Bot"
+
+          git config user.email "actions@github.com"
+
+          git add tly.json thf.json
+
+
+          if git diff --cached --quiet; then
+
+            echo "Fiyatlar değişmemiş."
+
+          else
+
+            git commit \
+              -m "TLY ve THF fiyatları güncellendi"
+
+            git push
+
+          fi
