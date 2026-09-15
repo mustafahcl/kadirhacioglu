@@ -1,14 +1,11 @@
 import json
 import sys
+import time
 from pathlib import Path
 from datetime import datetime, timedelta, timezone
 
 import requests
 
-
-# =========================================================
-# PORTFÖY
-# =========================================================
 
 ROOT = Path(__file__).resolve().parent
 
@@ -23,111 +20,109 @@ FUNDS = {
     }
 }
 
-
-# =========================================================
-# TEFAS AYARLARI
-# =========================================================
-
-TEFAS_URL = "https://www.tefas.gov.tr/api/funds/fonFiyatBilgiGetir"
+TEFAS_URL = "https://www.tefas.gov.tr/api/funds/fonGnlBlgSiraliGetir"
 
 HEADERS = {
+    "Accept": "*/*",
+    "Content-Type": "application/json",
+    "Origin": "https://www.tefas.gov.tr",
+    "Referer": "https://www.tefas.gov.tr/tr/fon-verileri",
     "User-Agent": (
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
         "AppleWebKit/537.36 (KHTML, like Gecko) "
-        "Chrome/140.0.0.0 Safari/537.36"
-    ),
-    "Accept": "application/json, text/plain, */*",
-    "Content-Type": "application/json",
-    "Origin": "https://www.tefas.gov.tr",
-    "Referer": "https://www.tefas.gov.tr/"
+        "Chrome/146.0.0.0 Safari/537.36"
+    )
 }
 
 
-# =========================================================
-# TEFAS'TAN FON VERİSİ ÇEK
-# =========================================================
+def request_tefas(code, date_value):
 
-def get_tefas_data(code, period=12):
+    payload = {
+        "fontip": "YAT",
+        "fonkod": code,
+        "bastarih": date_value,
+        "bittarih": date_value
+    }
 
     session = requests.Session()
 
     session.headers.update(HEADERS)
 
-    # Önce TEFAS ana sayfasına girip session/cookie oluştur
-    home = session.get(
-        "https://www.tefas.gov.tr/",
-        timeout=30
-    )
+    for attempt in range(5):
 
-    home.raise_for_status()
+        try:
 
-    payload = {
-        "fonKodu": code,
-        "dil": "TR",
-        "periyod": period
-    }
+            response = session.post(
+                TEFAS_URL,
+                json=payload,
+                timeout=60
+            )
 
-    response = session.post(
-        TEFAS_URL,
-        json=payload,
-        timeout=60
-    )
+            print(
+                f"{code}: HTTP {response.status_code}"
+            )
 
-    response.raise_for_status()
+            response.raise_for_status()
 
-    data = response.json()
+            data = response.json()
 
-    if data.get("errorCode"):
-        raise RuntimeError(
-            f"TEFAS API hatası: {data.get('errorMessage')}"
-        )
+            if isinstance(data, dict):
 
-    result = data.get("resultList", [])
+                rows = (
+                    data.get("data")
+                    or data.get("resultList")
+                    or data.get("result")
+                    or []
+                )
 
-    if not result:
-        raise RuntimeError(
-            f"{code}: TEFAS veri döndürmedi."
-        )
+            elif isinstance(data, list):
 
-    return result
+                rows = data
 
+            else:
 
-# =========================================================
-# TARİH NORMALİZASYONU
-# =========================================================
+                rows = []
+
+            if rows:
+                return rows
+
+        except Exception as e:
+
+            print(
+                f"{code}: deneme "
+                f"{attempt + 1}/5 başarısız: {e}"
+            )
+
+            time.sleep(5)
+
+    return []
+
 
 def normalize_date(value):
 
     if value is None:
         return None
 
-    if hasattr(value, "strftime"):
-        return value.strftime("%Y-%m-%d")
-
     value = str(value).strip()
 
-    # Örnek:
-    # 15.09.2026
-    if "." in value:
+    for fmt in (
+        "%d.%m.%Y",
+        "%Y-%m-%d",
+        "%Y-%m-%dT%H:%M:%S"
+    ):
+
         try:
+
             return datetime.strptime(
-                value[:10],
-                "%d.%m.%Y"
+                value[:19],
+                fmt
             ).strftime("%Y-%m-%d")
+
         except Exception:
             pass
 
-    # Örnek:
-    # 2026-09-15
-    if "-" in value:
-        return value[:10]
-
     return None
 
-
-# =========================================================
-# FİYAT NORMALİZASYONU
-# =========================================================
 
 def normalize_price(value):
 
@@ -139,227 +134,194 @@ def normalize_price(value):
 
     value = str(value).strip()
 
-    # Türkçe format ihtimali:
-    # 9.593,900000
-    if "," in value:
-
-        value = value.replace(".", "")
-        value = value.replace(",", ".")
-
     try:
+
+        if "," in value:
+
+            value = value.replace(".", "")
+            value = value.replace(",", ".")
+
         return float(value)
 
     except Exception:
+
         return None
 
 
-# =========================================================
-# FON GEÇMİŞİNİ GÜNCELLE
-# =========================================================
+def get_existing(code):
 
-def fetch_fund_history(code):
+    file = ROOT / f"{code.lower()}-history.json"
 
-    history_file = ROOT / f"{code.lower()}-history.json"
+    if not file.exists():
+        return []
 
-    existing = []
+    try:
 
-    # -----------------------------------------------------
-    # Mevcut geçmiş
-    # -----------------------------------------------------
+        with open(
+            file,
+            "r",
+            encoding="utf-8"
+        ) as f:
 
-    if history_file.exists():
+            data = json.load(f)
 
-        try:
+        return data if isinstance(data, list) else []
 
-            with open(
-                history_file,
-                "r",
-                encoding="utf-8"
-            ) as f:
+    except Exception:
 
-                existing = json.load(f)
-
-            if not isinstance(existing, list):
-                existing = []
-
-        except Exception:
-
-            existing = []
+        return []
 
 
-    print("")
-    print("=" * 60)
-    print(f"TEFAS -> {code}")
-    print("=" * 60)
+def save_history(code, rows):
 
-
-    # -----------------------------------------------------
-    # TEFAS
-    # -----------------------------------------------------
-
-    # 12 aylık veri çekiyoruz.
-    # Böylece yeni fiyat geldikçe geçmiş de güvenli şekilde
-    # yenilenmiş oluyor.
-
-    records = get_tefas_data(
-        code,
-        period=12
-    )
-
-
-    print(
-        f"TEFAS {code}: "
-        f"{len(records)} kayıt bulundu."
-    )
-
-
-    # -----------------------------------------------------
-    # TEFAS kayıtlarını hazırla
-    # -----------------------------------------------------
-
-    merged = {}
-
-
-    # Eski kayıtlar
-    for item in existing:
-
-        try:
-
-            date_value = normalize_date(
-                item.get("date")
-            )
-
-            price_value = normalize_price(
-                item.get("price")
-            )
-
-            if date_value and price_value is not None:
-
-                merged[date_value] = price_value
-
-        except Exception:
-            continue
-
-
-    # Yeni TEFAS kayıtları
-    for item in records:
-
-        # Güncel TEFAS API:
-        # tarih
-        # fiyat
-
-        date_value = normalize_date(
-            item.get("tarih")
-        )
-
-        price_value = normalize_price(
-            item.get("fiyat")
-        )
-
-        if date_value is None:
-            continue
-
-        if price_value is None:
-            continue
-
-        merged[date_value] = price_value
-
-
-    # -----------------------------------------------------
-    # Sırala
-    # -----------------------------------------------------
-
-    final_rows = []
-
-    for date_value in sorted(merged.keys()):
-
-        final_rows.append({
-            "date": date_value,
-            "price": merged[date_value]
-        })
-
-
-    if not final_rows:
-
-        raise RuntimeError(
-            f"{code}: Kullanılabilir fiyat verisi bulunamadı."
-        )
-
-
-    # -----------------------------------------------------
-    # Son 5 yıl
-    # -----------------------------------------------------
-
-    cutoff = datetime.now().date() - timedelta(
-        days=365 * 5
-    )
-
-    filtered = []
-
-    for item in final_rows:
-
-        try:
-
-            item_date = datetime.strptime(
-                item["date"],
-                "%Y-%m-%d"
-            ).date()
-
-            if item_date >= cutoff:
-
-                filtered.append(item)
-
-        except Exception:
-
-            continue
-
-
-    # -----------------------------------------------------
-    # JSON KAYDET
-    # -----------------------------------------------------
+    file = ROOT / f"{code.lower()}-history.json"
 
     with open(
-        history_file,
+        file,
         "w",
         encoding="utf-8"
     ) as f:
 
         json.dump(
-            filtered,
+            rows,
             f,
             ensure_ascii=False,
             indent=2
         )
 
 
-    latest = filtered[-1]
+def fetch_fund(code):
 
+    print("")
+    print("=" * 60)
+    print(f"TEFAS -> {code}")
+    print("=" * 60)
+
+    existing = get_existing(code)
+
+    merged = {}
+
+    for item in existing:
+
+        try:
+
+            d = normalize_date(
+                item.get("date")
+            )
+
+            p = normalize_price(
+                item.get("price")
+            )
+
+            if d and p is not None:
+                merged[d] = p
+
+        except Exception:
+            pass
+
+
+    today = datetime.now().date()
+
+    # Son 30 günü ayrı ayrı kontrol ediyoruz.
+    # Böylece TEFAS'ın tek istekteki tarih sınırına takılmıyoruz.
+
+    for i in range(30):
+
+        day = today - timedelta(days=i)
+
+        date_string = day.strftime(
+            "%d.%m.%Y"
+        )
+
+        rows = request_tefas(
+            code,
+            date_string
+        )
+
+        if not rows:
+            continue
+
+        for row in rows:
+
+            d = normalize_date(
+                row.get("tarih")
+                or row.get("date")
+            )
+
+            p = normalize_price(
+                row.get("fiyat")
+                or row.get("price")
+            )
+
+            if d and p is not None:
+
+                merged[d] = p
+
+
+        # TEFAS'ı gereksiz yere hızlı sorgulamayalım.
+        time.sleep(1)
+
+
+    if not merged:
+
+        raise RuntimeError(
+            f"{code}: TEFAS'tan veri alınamadı."
+        )
+
+
+    final = []
+
+    for d in sorted(merged.keys()):
+
+        final.append({
+            "date": d,
+            "price": merged[d]
+        })
+
+
+    # Son 5 yıl
+    cutoff = today - timedelta(
+        days=365 * 5
+    )
+
+    final = [
+        x for x in final
+        if datetime.strptime(
+            x["date"],
+            "%Y-%m-%d"
+        ).date() >= cutoff
+    ]
+
+
+    save_history(
+        code,
+        final
+    )
+
+
+    latest = final[-1]
 
     print("")
     print(f"✓ {code} BAŞARILI")
-    print(f"  Tarih : {latest['date']}")
-    print(f"  Fiyat : {latest['price']}")
-    print(f"  Kayıt : {len(filtered)}")
+    print(f"Tarih: {latest['date']}")
+    print(f"Fiyat: {latest['price']}")
+    print(f"Kayıt: {len(final)}")
 
     return latest
 
 
-# =========================================================
-# PORTFÖY.JSON
-# =========================================================
+def update_portfolio(latest):
 
-def update_portfolio(latest_prices):
+    file = ROOT / "portfolio.json"
 
-    portfolio_file = ROOT / "portfolio.json"
+    portfolio = {}
 
-
-    # Mevcut dosyayı oku
-    if portfolio_file.exists():
+    if file.exists():
 
         try:
 
             with open(
-                portfolio_file,
+                file,
                 "r",
                 encoding="utf-8"
             ) as f:
@@ -367,17 +329,8 @@ def update_portfolio(latest_prices):
                 portfolio = json.load(f)
 
         except Exception:
-
             portfolio = {}
 
-    else:
-
-        portfolio = {}
-
-
-    # -----------------------------------------------------
-    # PORTFÖY
-    # -----------------------------------------------------
 
     portfolio["owner"] = portfolio.get(
         "owner",
@@ -385,7 +338,6 @@ def update_portfolio(latest_prices):
     )
 
     portfolio["currency"] = "TRY"
-
 
     portfolio["assets"] = [
         {
@@ -402,28 +354,32 @@ def update_portfolio(latest_prices):
         }
     ]
 
-
-    portfolio["latest"] = latest_prices
-
-
-    portfolio["updatedAt"] = datetime.now(
-        timezone.utc
-    ).isoformat()
-
-
-    # -----------------------------------------------------
-    # TOPLAM MALİYET
-    # -----------------------------------------------------
+    portfolio["latest"] = latest
 
     total_cost = 0
+    total_value = 0
 
     for asset in portfolio["assets"]:
 
-        total_cost += (
-            float(asset["quantity"])
-            *
-            float(asset["avgCost"])
+        code = asset["code"]
+        quantity = float(
+            asset["quantity"]
         )
+        avg_cost = float(
+            asset["avgCost"]
+        )
+
+        total_cost += (
+            quantity * avg_cost
+        )
+
+        if code in latest:
+
+            total_value += (
+                quantity
+                *
+                float(latest[code]["price"])
+            )
 
 
     portfolio["totalCost"] = round(
@@ -431,50 +387,24 @@ def update_portfolio(latest_prices):
         6
     )
 
-
-    # -----------------------------------------------------
-    # TOPLAM GÜNCEL DEĞER
-    # -----------------------------------------------------
-
-    total_value = 0
-
-    for code, latest in latest_prices.items():
-
-        asset = next(
-            (
-                x for x in portfolio["assets"]
-                if x["code"] == code
-            ),
-            None
-        )
-
-        if asset is None:
-            continue
-
-        total_value += (
-            float(asset["quantity"])
-            *
-            float(latest["price"])
-        )
-
-
     portfolio["totalValue"] = round(
         total_value,
         6
     )
-
 
     portfolio["totalProfit"] = round(
         total_value - total_cost,
         6
     )
 
-
-    if total_cost > 0:
+    if total_cost:
 
         portfolio["totalProfitPercent"] = round(
-            ((total_value - total_cost) / total_cost)
-            * 100,
+            (
+                (total_value - total_cost)
+                /
+                total_cost
+            ) * 100,
             4
         )
 
@@ -483,12 +413,13 @@ def update_portfolio(latest_prices):
         portfolio["totalProfitPercent"] = 0
 
 
-    # -----------------------------------------------------
-    # KAYDET
-    # -----------------------------------------------------
+    portfolio["updatedAt"] = datetime.now(
+        timezone.utc
+    ).isoformat()
+
 
     with open(
-        portfolio_file,
+        file,
         "w",
         encoding="utf-8"
     ) as f:
@@ -503,17 +434,7 @@ def update_portfolio(latest_prices):
 
     print("")
     print("✓ portfolio.json güncellendi")
-    print(f"  Toplam maliyet : {total_cost:,.2f} TL")
-    print(f"  Güncel değer   : {total_value:,.2f} TL")
-    print(
-        f"  Kâr/Zarar      : "
-        f"{total_value - total_cost:,.2f} TL"
-    )
 
-
-# =========================================================
-# MAIN
-# =========================================================
 
 def main():
 
@@ -522,62 +443,36 @@ def main():
     print("       TLY + THF TEFAS GÜNCELLEME")
     print("=" * 60)
 
-
-    latest_prices = {}
-
+    latest = {}
     errors = []
-
-
-    # -----------------------------------------------------
-    # TLY + THF
-    # -----------------------------------------------------
 
     for code in FUNDS:
 
         try:
 
-            latest = fetch_fund_history(
-                code
-            )
-
-            latest_prices[code] = latest
+            latest[code] = fetch_fund(code)
 
         except Exception as e:
 
             print("")
             print(f"❌ {code} HATASI:")
-            print(str(e))
+            print(e)
 
             errors.append(code)
 
 
-    # -----------------------------------------------------
-    # Hiç veri yok
-    # -----------------------------------------------------
-
-    if not latest_prices:
+    if not latest:
 
         print("")
-        print(
-            "❌ TLY veya THF için "
-            "TEFAS verisi alınamadı."
-        )
+        print("❌ Hiçbir fon verisi alınamadı.")
 
         sys.exit(1)
 
 
-    # -----------------------------------------------------
-    # PORTFÖYÜ GÜNCELLE
-    # -----------------------------------------------------
-
     update_portfolio(
-        latest_prices
+        latest
     )
 
-
-    # -----------------------------------------------------
-    # Hata varsa workflow kırmızı
-    # -----------------------------------------------------
 
     if errors:
 
@@ -592,13 +487,9 @@ def main():
 
     print("")
     print("=" * 60)
-    print("✓ TÜM FONLAR BAŞARIYLA GÜNCELLENDİ")
+    print("✓ TLY + THF BAŞARIYLA GÜNCELLENDİ")
     print("=" * 60)
 
-
-# =========================================================
-# START
-# =========================================================
 
 if __name__ == "__main__":
     main()
