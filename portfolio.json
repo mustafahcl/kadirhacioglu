@@ -1,0 +1,19 @@
+{
+  "owner": "",
+  "currency": "TRY",
+  "assets": [
+    {
+      "code": "TLY",
+      "name": "TLY",
+      "quantity": 14,
+      "avgCost": 9593.9
+    },
+    {
+      "code": "THF",
+      "name": "THF",
+      "quantity": 1922,
+      "avgCost": 2.912217
+    }
+  ],
+  "updatedAt": null
+}
