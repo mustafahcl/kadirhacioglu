@@ -1,12 +1,21 @@
 <!doctype html>
 <html lang="tr">
 <head>
+
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#080b14">
+
+<meta name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover">
+
+<meta name="theme-color"
+      content="#080b14">
+
 <title>Portföyüm — TLY & THF</title>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+
 <style>
+
 :root{
   --bg:#05070c;
   --panel:#0b1220;
@@ -20,14 +29,26 @@
   --orange:#f1a24a;
 }
 
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+}
 
 body{
   margin:0;
   background:
-    radial-gradient(circle at 50% -10%,#111d35 0,#06080d 42%,#030407 100%);
+    radial-gradient(
+      circle at 50% -10%,
+      #111d35 0,
+      #06080d 42%,
+      #030407 100%
+    );
   color:var(--text);
-  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "SF Pro Display",
+    "Segoe UI",
+    sans-serif;
 }
 
 .app{
@@ -88,6 +109,11 @@ body{
   font-size:18px;
   font-weight:650;
   margin-top:7px;
+}
+
+.dailyMain .dailyPercent{
+  font-size:14px;
+  margin-left:5px;
 }
 
 .dailyLabel{
@@ -237,7 +263,7 @@ h2{
   background:#101520;
   border:1px solid #20283a;
   font-weight:800;
-  font-size:15px;
+  font-size:14px;
 }
 
 .asset h3{
@@ -291,8 +317,22 @@ h2{
   font-size:11px;
 }
 
+.dailyInline{
+  white-space:nowrap;
+}
+
+.dailyInlinePercent{
+  font-size:11px;
+  margin-left:3px;
+}
+
 .card{
-  background:linear-gradient(180deg,#0a111e,#080d16);
+  background:
+    linear-gradient(
+      180deg,
+      #0a111e,
+      #080d16
+    );
   border:1px solid #121c2b;
   border-radius:22px;
   padding:20px;
@@ -391,20 +431,30 @@ h2{
   .top .icons{
     font-size:22px;
   }
+
 }
+
 </style>
+
 </head>
 
 <body>
 
 <div class="app">
 
+
   <!-- ÜST -->
+
   <div class="top">
 
     <div class="hello">
+
       Merhaba,
-      <b id="owner">Kadir Hacıoğlu</b>
+
+      <b id="owner">
+        Portföyüm
+      </b>
+
     </div>
 
     <div class="icons">
@@ -415,20 +465,29 @@ h2{
 
 
   <!-- BAŞLIK -->
+
   <div class="subtitle">
-   Portföy⌄
+    Portföy⌄
   </div>
 
 
   <!-- ANA PORTFÖY DEĞERİ -->
-  <div class="total" id="totalValue">
+
+  <div
+    class="total"
+    id="totalValue"
+  >
     —
     <span>TRY⌄</span>
   </div>
 
 
   <!-- GÜNLÜK K/Z -->
-  <div class="dailyMain" id="dailyMain">
+
+  <div
+    class="dailyMain"
+    id="dailyMain"
+  >
     —
   </div>
 
@@ -438,16 +497,24 @@ h2{
 
 
   <!-- GRAFİK -->
+
   <div class="chartWrap">
+
     <canvas id="chart"></canvas>
+
   </div>
 
   <div class="range">
-    <span class="active">TÜMÜ</span>
+
+    <span class="active">
+      TÜMÜ
+    </span>
+
   </div>
 
 
   <!-- BUTONLAR -->
+
   <div class="actions">
 
     <button class="btn">
@@ -462,11 +529,13 @@ h2{
 
 
   <!-- GENEL ÖZET -->
+
   <h2>
     Genel Özet
   </h2>
 
   <div class="summary">
+
 
     <div class="metric">
 
@@ -474,7 +543,10 @@ h2{
         Genel Kar / Zarar
       </div>
 
-      <div class="value" id="profit">
+      <div
+        class="value"
+        id="profit"
+      >
         —
       </div>
 
@@ -487,7 +559,10 @@ h2{
         Genel Getiri
       </div>
 
-      <div class="value" id="profitPct">
+      <div
+        class="value"
+        id="profitPct"
+      >
         —
       </div>
 
@@ -500,7 +575,10 @@ h2{
         Toplam Maliyet
       </div>
 
-      <div class="value" id="cost">
+      <div
+        class="value"
+        id="cost"
+      >
         —
       </div>
 
@@ -513,7 +591,10 @@ h2{
         Portföy Değeri
       </div>
 
-      <div class="value" id="summaryValue">
+      <div
+        class="value"
+        id="summaryValue"
+      >
         —
       </div>
 
@@ -526,7 +607,10 @@ h2{
         Günlük Kar / Zarar
       </div>
 
-      <div class="value" id="daily">
+      <div
+        class="value"
+        id="daily"
+      >
         —
       </div>
 
@@ -539,7 +623,10 @@ h2{
         Karlı Pozisyon
       </div>
 
-      <div class="value" id="positions">
+      <div
+        class="value"
+        id="positions"
+      >
         —
       </div>
 
@@ -549,6 +636,7 @@ h2{
 
 
   <!-- VARLIKLAR -->
+
   <div class="assetsHead">
 
     <h2 style="margin:0">
@@ -563,22 +651,26 @@ h2{
 
 
   <!-- DAĞILIM -->
+
   <div class="allocation">
 
     <div
       id="allocTly"
-      class="seg tly">
-    </div>
+      class="seg tly"
+      style="width:0%"
+    ></div>
 
     <div
       id="allocThf"
-      class="seg thf">
-    </div>
+      class="seg thf"
+      style="width:0%"
+    ></div>
 
   </div>
 
 
   <!-- FONLAR -->
+
   <div id="assets">
 
     <div class="loading">
@@ -589,6 +681,7 @@ h2{
 
 
   <!-- GENEL DETAY -->
+
   <div class="card">
 
     <h3>
@@ -598,43 +691,90 @@ h2{
     <table class="table">
 
       <tr>
-        <td>Toplam portföy değeri</td>
-        <td id="dValue">—</td>
+        <td>
+          Toplam portföy değeri
+        </td>
+
+        <td id="dValue">
+          —
+        </td>
       </tr>
 
-      <tr>
-        <td>Toplam yatırım maliyeti</td>
-        <td id="dCost">—</td>
-      </tr>
 
       <tr>
-        <td>Genel kar / zarar</td>
-        <td id="dProfit">—</td>
+        <td>
+          Toplam yatırım maliyeti
+        </td>
+
+        <td id="dCost">
+          —
+        </td>
       </tr>
 
-      <tr>
-        <td>Genel getiri</td>
-        <td id="dPct">—</td>
-      </tr>
 
       <tr>
-        <td>Günlük kar / zarar</td>
-        <td id="dDaily">—</td>
+        <td>
+          Genel kar / zarar
+        </td>
+
+        <td id="dProfit">
+          —
+        </td>
       </tr>
 
-      <tr>
-        <td>Portföydeki fon sayısı</td>
-        <td id="dFunds">—</td>
-      </tr>
 
       <tr>
-        <td>Toplam adet</td>
-        <td id="dQty">—</td>
+        <td>
+          Genel getiri
+        </td>
+
+        <td id="dPct">
+          —
+        </td>
       </tr>
 
+
       <tr>
-        <td>Veri tarihi</td>
-        <td id="dataDate">—</td>
+        <td>
+          Günlük kar / zarar
+        </td>
+
+        <td id="dDaily">
+          —
+        </td>
+      </tr>
+
+
+      <tr>
+        <td>
+          Portföydeki fon sayısı
+        </td>
+
+        <td id="dFunds">
+          —
+        </td>
+      </tr>
+
+
+      <tr>
+        <td>
+          Toplam adet
+        </td>
+
+        <td id="dQty">
+          —
+        </td>
+      </tr>
+
+
+      <tr>
+        <td>
+          Veri tarihi
+        </td>
+
+        <td id="dataDate">
+          —
+        </td>
       </tr>
 
     </table>
@@ -642,322 +782,565 @@ h2{
   </div>
 
 
-  <div class="updated" id="updated">
+  <div
+    class="updated"
+    id="updated"
+  >
     TEFAS verisi bekleniyor…
   </div>
+
 
 </div>
 
 
 <script>
 
-const money=(n,d=2)=>
-new Intl.NumberFormat(
-  'tr-TR',
-  {
-    minimumFractionDigits:d,
-    maximumFractionDigits:d
-  }
-).format(Number(n)||0)+' ₺';
+
+/* =========================
+   FORMATLAMA
+========================= */
+
+const money = (
+  n,
+  d = 2
+) => {
+
+  return new Intl.NumberFormat(
+    'tr-TR',
+    {
+      minimumFractionDigits:d,
+      maximumFractionDigits:d
+    }
+  ).format(
+    Number(n) || 0
+  ) + ' ₺';
+
+};
 
 
-const num=(n,d=2)=>
-new Intl.NumberFormat(
-  'tr-TR',
-  {
-    minimumFractionDigits:d,
-    maximumFractionDigits:d
-  }
-).format(Number(n)||0);
+const num = (
+  n,
+  d = 2
+) => {
+
+  return new Intl.NumberFormat(
+    'tr-TR',
+    {
+      minimumFractionDigits:d,
+      maximumFractionDigits:d
+    }
+  ).format(
+    Number(n) || 0
+  );
+
+};
 
 
-const pct=n=>
-(Number(n)>=0?'+':'')+
-num(Number(n)||0,2)+'%';
+const pct = n => {
+
+  const value =
+    Number(n) || 0;
+
+  return (
+    value >= 0
+      ? '+'
+      : ''
+  ) +
+  num(value,2) +
+  '%';
+
+};
 
 
-function color(el,value){
+/* =========================
+   RENK
+========================= */
 
-  el.classList.remove(
+function color(
+  element,
+  value
+){
+
+  element.classList.remove(
     'positive',
     'negative'
   );
 
-  if(Number(value)>0){
-    el.classList.add('positive');
+  if(
+    Number(value) > 0
+  ){
+
+    element.classList.add(
+      'positive'
+    );
+
   }
 
-  if(Number(value)<0){
-    el.classList.add('negative');
+  if(
+    Number(value) < 0
+  ){
+
+    element.classList.add(
+      'negative'
+    );
+
   }
 
 }
 
 
-let chart=null;
+/* =========================
+   GRAFİK
+========================= */
 
+let chart = null;
+
+
+/* =========================
+   VERİYİ YÜKLE
+========================= */
 
 async function load(){
 
   try{
 
-    /*
-      SADECE portfolio.json
-    */
 
-    const response=await fetch(
-      'portfolio.json?cache='+Date.now()
-    );
-
-    if(!response.ok){
-      throw new Error(
-        'portfolio.json bulunamadı. HTTP '+response.status
+    const response =
+      await fetch(
+        'portfolio.json?v=' +
+        Date.now()
       );
-    }
-
-    const p=await response.json();
 
 
-    /*
-      ASSET FORMATINI DESTEKLE
-    */
+    if(
+      !response.ok
+    ){
 
-    const assets=Array.isArray(p.assets)
-      ?p.assets
-      :Object.entries(p.assets||{})
-        .map(([code,a])=>({
-          ...a,
-          code:a.code||code
-        }));
-
-
-    if(!assets.length){
       throw new Error(
-        'portfolio.json içinde fon bulunamadı.'
+        'portfolio.json okunamadı. HTTP ' +
+        response.status
       );
+
     }
 
 
-    let totalValue=0;
-    let totalCost=0;
-    let totalQty=0;
-    let dailyTotal=0;
-    let profitable=0;
-    let hasDaily=false;
+    const p =
+      await response.json();
 
 
     /*
-      FONLARI HESAPLA
+      ASSETS
     */
 
-    const items=assets.map(a=>{
+    let assets = [];
 
-      const quantity=
-        Number(a.quantity)||0;
 
-      const avgCost=
-        Number(
-          a.avgCost ??
-          a.avg_cost ??
-          0
+    if(
+      Array.isArray(
+        p.assets
+      )
+    ){
+
+      assets =
+        p.assets;
+
+    }
+
+
+    else if(
+      p.assets &&
+      typeof p.assets === 'object'
+    ){
+
+      assets =
+        Object.entries(
+          p.assets
+        ).map(
+          ([code,asset]) => ({
+            ...asset,
+            code:
+              asset.code ||
+              code
+          })
         );
 
-      const currentPrice=
-        Number(
-          a.currentPrice ??
-          a.price ??
-          0
-        );
-
-      const cost=
-        Number(
-          a.cost ??
-          quantity*avgCost
-        );
-
-      const value=
-        Number(
-          a.value ??
-          quantity*currentPrice
-        );
-
-      const profit=
-        Number(
-          a.profit ??
-          value-cost
-        );
-
-      const profitPercent=
-        Number(
-          a.profitPercent ??
-          (cost
-            ?profit/cost*100
-            :0)
-        );
+    }
 
 
-      /*
-        GÜNLÜK K/Z
-      */
+    if(
+      !assets.length
+    ){
 
-      const dailyProfit=
-        a.dailyProfit!==null &&
-        a.dailyProfit!==undefined
-          ?Number(a.dailyProfit)
-          :null;
+      throw new Error(
+        'portfolio.json içinde assets bulunamadı.'
+      );
 
-
-      const dailyProfitPercent=
-        a.dailyProfitPercent!==null &&
-        a.dailyProfitPercent!==undefined
-          ?Number(a.dailyProfitPercent)
-          :null;
-
-
-      if(dailyProfit!==null){
-
-        dailyTotal+=dailyProfit;
-        hasDaily=true;
-
-      }
-
-
-      totalValue+=value;
-      totalCost+=cost;
-      totalQty+=quantity;
-
-
-      if(profit>=0){
-        profitable++;
-      }
-
-
-      return{
-        ...a,
-
-        quantity,
-        avgCost,
-        currentPrice,
-        cost,
-        value,
-        profit,
-        profitPercent,
-        dailyProfit,
-        dailyProfitPercent
-      };
-
-    });
+    }
 
 
     /*
-      GENEL SUMMARY
+      HESAPLAR
     */
 
-    const summary=p.summary||{};
+    let totalValue = 0;
+
+    let totalCost = 0;
+
+    let totalQty = 0;
+
+    let dailyTotal = 0;
+
+    let profitable = 0;
 
 
-    const finalValue=
-      Number(
-        summary.totalValue ??
-        totalValue
+    /*
+      FONLARI NORMALLEŞTİR
+    */
+
+    const items =
+      assets.map(
+        asset => {
+
+
+          const quantity =
+            Number(
+              asset.quantity
+            ) || 0;
+
+
+          const avgCost =
+            Number(
+              asset.avgCost ??
+              asset.avg_cost ??
+              0
+            );
+
+
+          const currentPrice =
+            Number(
+              asset.currentPrice ??
+              asset.price ??
+              0
+            );
+
+
+          const previousPrice =
+            Number(
+              asset.previousPrice ??
+              0
+            );
+
+
+          const cost =
+            Number(
+              asset.cost
+            ) ||
+            quantity *
+            avgCost;
+
+
+          const value =
+            Number(
+              asset.value
+            ) ||
+            quantity *
+            currentPrice;
+
+
+          const profit =
+            Number.isFinite(
+              Number(
+                asset.profit
+              )
+            )
+              ? Number(
+                  asset.profit
+                )
+              : value - cost;
+
+
+          const profitPercent =
+            Number.isFinite(
+              Number(
+                asset.profitPercent
+              )
+            )
+              ? Number(
+                  asset.profitPercent
+                )
+              : (
+                  cost
+                    ? profit /
+                      cost *
+                      100
+                    : 0
+                );
+
+
+          const dailyProfit =
+            Number.isFinite(
+              Number(
+                asset.dailyProfit
+              )
+            )
+              ? Number(
+                  asset.dailyProfit
+                )
+              : (
+                  previousPrice
+                    ? (
+                        currentPrice -
+                        previousPrice
+                      ) *
+                      quantity
+                    : 0
+                );
+
+
+          const dailyProfitPercent =
+            Number.isFinite(
+              Number(
+                asset.dailyProfitPercent
+              )
+            )
+              ? Number(
+                  asset.dailyProfitPercent
+                )
+              : (
+                  previousPrice
+                    ? (
+                        currentPrice /
+                        previousPrice -
+                        1
+                      ) *
+                      100
+                    : 0
+                );
+
+
+          totalValue +=
+            value;
+
+
+          totalCost +=
+            cost;
+
+
+          totalQty +=
+            quantity;
+
+
+          dailyTotal +=
+            dailyProfit;
+
+
+          if(
+            profit > 0
+          ){
+
+            profitable++;
+
+          }
+
+
+          return {
+
+            ...asset,
+
+            code:
+              String(
+                asset.code || ''
+              ).toUpperCase(),
+
+            quantity,
+
+            avgCost,
+
+            currentPrice,
+
+            previousPrice,
+
+            cost,
+
+            value,
+
+            profit,
+
+            profitPercent,
+
+            dailyProfit,
+
+            dailyProfitPercent
+
+          };
+
+        }
       );
 
 
-    const finalCost=
-      Number(
-        summary.totalCost ??
-        totalCost
-      );
+    /*
+      SUMMARY
+    */
+
+    const summary =
+      p.summary || {};
 
 
-    const finalProfit=
-      Number(
-        summary.totalProfit ??
-        (finalValue-finalCost)
-      );
-
-
-    const finalProfitPercent=
-      Number(
-        summary.totalProfitPercent ??
-        (
-          finalCost
-          ?finalProfit/finalCost*100
-          :0
+    const finalValue =
+      Number.isFinite(
+        Number(
+          summary.totalValue
         )
-      );
+      )
+        ? Number(
+            summary.totalValue
+          )
+        : totalValue;
 
 
-    /*
-      OWNER
-    */
+    const finalCost =
+      Number.isFinite(
+        Number(
+          summary.totalCost
+        )
+      )
+        ? Number(
+            summary.totalCost
+          )
+        : totalCost;
+
+
+    const finalProfit =
+      Number.isFinite(
+        Number(
+          summary.totalProfit
+        )
+      )
+        ? Number(
+            summary.totalProfit
+          )
+        : finalValue -
+          finalCost;
+
+
+    const finalProfitPercent =
+      Number.isFinite(
+        Number(
+          summary.totalProfitPercent
+        )
+      )
+        ? Number(
+            summary.totalProfitPercent
+          )
+        : (
+            finalCost
+              ? finalProfit /
+                finalCost *
+                100
+              : 0
+          );
+
+
+    const finalDaily =
+      Number.isFinite(
+        Number(
+          summary.dailyProfit
+        )
+      )
+        ? Number(
+            summary.dailyProfit
+          )
+        : dailyTotal;
+
+
+    const finalDailyPercent =
+      Number.isFinite(
+        Number(
+          summary.dailyProfitPercent
+        )
+      )
+        ? Number(
+            summary.dailyProfitPercent
+          )
+        : (
+            finalValue -
+            finalDaily
+              ? finalDaily /
+                (
+                  finalValue -
+                  finalDaily
+                ) *
+                100
+              : 0
+          );
+
+
+    /* =========================
+       OWNER
+    ========================= */
 
     document.getElementById(
       'owner'
-    ).textContent=
-      p.owner||'Portföyüm';
+    ).textContent =
+      p.owner ||
+      'Portföyüm';
 
 
-    /*
-      ANA PORTFÖY
-    */
+    /* =========================
+       ANA DEĞER
+    ========================= */
 
     document.getElementById(
       'totalValue'
-    ).innerHTML=
-      money(finalValue)+
+    ).innerHTML =
+      money(
+        finalValue
+      ) +
       ' <span>TRY⌄</span>';
 
 
-    /*
-      GÜNLÜK ANA K/Z
-    */
+    /* =========================
+       ANA GÜNLÜK K/Z
+    ========================= */
 
-    const dailyMain=
+    const dailyMain =
       document.getElementById(
         'dailyMain'
       );
 
 
-    if(
-      summary.dailyProfit!==null &&
-      summary.dailyProfit!==undefined
-    ){
+    dailyMain.innerHTML =
 
-      dailyTotal=
-        Number(summary.dailyProfit);
+      money(
+        finalDaily
+      ) +
 
-      hasDaily=true;
-
-    }
+      `<span class="dailyPercent">
+        (${pct(finalDailyPercent)})
+      </span>`;
 
 
-    if(hasDaily){
+    color(
+      dailyMain,
+      finalDaily
+    );
 
-      dailyMain.textContent=
-        money(dailyTotal);
 
-      color(
-        dailyMain,
-        dailyTotal
+    /* =========================
+       GENEL ÖZET
+    ========================= */
+
+    const profitEl =
+      document.getElementById(
+        'profit'
       );
 
-    }else{
 
-      dailyMain.textContent='—';
+    profitEl.textContent =
+      money(
+        finalProfit
+      );
 
-    }
-
-
-    /*
-      GENEL ÖZET
-    */
-
-    const profitEl=
-      document.getElementById('profit');
-
-    profitEl.textContent=
-      money(finalProfit);
 
     color(
       profitEl,
@@ -965,415 +1348,578 @@ async function load(){
     );
 
 
-    const pctEl=
-      document.getElementById('profitPct');
+    const profitPctEl =
+      document.getElementById(
+        'profitPct'
+      );
 
-    pctEl.textContent=
-      pct(finalProfitPercent);
+
+    profitPctEl.textContent =
+      pct(
+        finalProfitPercent
+      );
+
 
     color(
-      pctEl,
+      profitPctEl,
       finalProfitPercent
     );
 
 
     document.getElementById(
       'cost'
-    ).textContent=
-      money(finalCost);
+    ).textContent =
+      money(
+        finalCost
+      );
 
 
     document.getElementById(
       'summaryValue'
-    ).textContent=
-      money(finalValue);
+    ).textContent =
+      money(
+        finalValue
+      );
 
 
-    const dailyEl=
+    const dailyEl =
       document.getElementById(
         'daily'
       );
 
 
-    if(hasDaily){
+    dailyEl.innerHTML =
 
-      dailyEl.textContent=
-        money(dailyTotal);
+      money(
+        finalDaily
+      ) +
 
-      color(
-        dailyEl,
-        dailyTotal
-      );
+      ` <span style="font-size:12px">
+        (${pct(finalDailyPercent)})
+      </span>`;
 
-    }else{
 
-      dailyEl.textContent='—';
-
-    }
+    color(
+      dailyEl,
+      finalDaily
+    );
 
 
     document.getElementById(
       'positions'
-    ).textContent=
-      profitable+'/'+items.length;
+    ).textContent =
+      profitable +
+      '/' +
+      items.length;
 
 
-    /*
-      FON DAĞILIMI
-    */
+    /* =========================
+       DAĞILIM
+    ========================= */
 
-    const tly=
+    const tly =
       items.find(
-        x=>x.code==='TLY'
+        x =>
+          x.code === 'TLY'
       );
 
-    const thf=
+
+    const thf =
       items.find(
-        x=>x.code==='THF'
+        x =>
+          x.code === 'THF'
       );
 
 
-    const tlyValue=
-      tly?tly.value:0;
+    const tlyValue =
+      tly
+        ? tly.value
+        : 0;
 
-    const thfValue=
-      thf?thf.value:0;
+
+    const thfValue =
+      thf
+        ? thf.value
+        : 0;
 
 
     document.getElementById(
       'allocTly'
-    ).style.width=
-      (
-        finalValue
-        ? tlyValue/finalValue*100
-        :0
-      )+'%';
+    ).style.width =
+
+      finalValue
+        ? (
+            tlyValue /
+            finalValue *
+            100
+          ) +
+          '%'
+        : '0%';
 
 
     document.getElementById(
       'allocThf'
-    ).style.width=
-      (
-        finalValue
-        ? thfValue/finalValue*100
-        :0
-      )+'%';
+    ).style.width =
 
+      finalValue
+        ? (
+            thfValue /
+            finalValue *
+            100
+          ) +
+          '%'
+        : '0%';
 
-    /*
-      FON KARTLARI
-    */
 
-    document.getElementById(
-      'assets'
-    ).innerHTML=
+    /* =========================
+       VARLIKLAR
+    ========================= */
 
-      items.map(x=>{
+    const assetsContainer =
+      document.getElementById(
+        'assets'
+      );
 
-        const decimals=
-          x.code==='THF'
-          ?6
-          :2;
 
+    assetsContainer.innerHTML =
 
-        const dailyText=
-          x.dailyProfit===null
-          ?'—'
-          :money(x.dailyProfit);
+      items.map(
+        x => {
 
 
-        const dailyClass=
-          x.dailyProfit===null
-          ?''
-          :x.dailyProfit>=0
-            ?'positive'
-            :'negative';
+          const decimals =
+            x.code === 'THF'
+              ? 6
+              : 2;
 
 
-        return`
+          const dailyClass =
+            x.dailyProfit >= 0
+              ? 'positive'
+              : 'negative';
 
-        <div class="asset">
 
-          <div class="logo">
-            ${x.code}
-          </div>
+          const totalClass =
+            x.profit >= 0
+              ? 'positive'
+              : 'negative';
 
 
-          <div>
+          return `
 
-            <h3>
-              ${x.code}
-            </h3>
+            <div class="asset">
 
-            <div class="sub">
 
-              ${num(x.quantity,0)}
-              adet
+              <!-- LOGO -->
 
-              · Ortalama maliyet
+              <div class="logo">
 
-              ${num(x.avgCost,decimals)}
-              ₺
+                ${x.code}
 
-            </div>
+              </div>
 
-          </div>
 
+              <!-- FON ADI -->
 
-          <div class="right">
+              <div>
 
-            <div class="price">
-              ${money(x.value)}
-            </div>
+                <h3>
+                  ${x.code}
+                </h3>
 
-            <div class="ret ${
-              x.profit>=0
-                ?'positive'
-                :'negative'
-            }">
+                <div class="sub">
 
-              ${money(x.profit)}
+                  ${num(
+                    x.quantity,
+                    0
+                  )}
 
-              (${pct(x.profitPercent)})
+                  adet
 
-            </div>
+                  · Ortalama maliyet
 
-          </div>
+                  ${num(
+                    x.avgCost,
+                    decimals
+                  )}
 
+                  ₺
 
-          <div class="detail">
+                </div>
 
+              </div>
 
-            <div>
 
-              <small>
-                Adet
-              </small>
+              <!-- DEĞER -->
 
-              <b>
-                ${num(x.quantity,0)}
-              </b>
+              <div class="right">
 
-            </div>
+                <div class="price">
 
+                  ${money(
+                    x.value
+                  )}
 
-            <div>
+                </div>
 
-              <small>
-                Güncel fiyat
-              </small>
 
-              <b>
-                ${num(x.currentPrice,decimals)}
-                ₺
-              </b>
+                <div class="ret ${totalClass}">
 
-            </div>
+                  ${money(
+                    x.profit
+                  )}
 
+                  (${pct(
+                    x.profitPercent
+                  )})
 
-            <div>
+                </div>
 
-              <small>
-                Maliyet
-              </small>
+              </div>
 
-              <b>
-                ${money(x.cost)}
-              </b>
 
-            </div>
+              <!-- DETAYLAR -->
 
+              <div class="detail">
 
-            <div>
 
-              <small>
-                Günlük K/Z
-              </small>
+                <!-- ADET -->
 
-              <b class="${dailyClass}">
-                ${dailyText}
-              </b>
+                <div>
 
-            </div>
+                  <small>
+                    Adet
+                  </small>
 
+                  <b>
 
-            <div>
+                    ${num(
+                      x.quantity,
+                      0
+                    )}
 
-              <small>
-                Toplam K/Z
-              </small>
+                  </b>
 
-              <b class="${
-                x.profit>=0
-                  ?'positive'
-                  :'negative'
-              }">
+                </div>
 
-                ${money(x.profit)}
 
-              </b>
+                <!-- GÜNCEL FİYAT -->
 
-            </div>
+                <div>
 
+                  <small>
+                    Güncel fiyat
+                  </small>
 
-            <div>
+                  <b>
 
-              <small>
-                Toplam Getiri
-              </small>
-
-              <b class="${
-                x.profit>=0
-                  ?'positive'
-                  :'negative'
-              }">
-
-                ${pct(x.profitPercent)}
-
-              </b>
-
-            </div>
-
-
-            <div>
-
-              <small>
-                Önceki fiyat
-              </small>
-
-              <b>
-
-                ${
-                  x.previousPrice!==undefined
-                  ?num(
-                      x.previousPrice,
+                    ${num(
+                      x.currentPrice,
                       decimals
-                    )+' ₺'
-                  :'—'
-                }
+                    )}
+                    ₺
 
-              </b>
+                  </b>
+
+                </div>
+
+
+                <!-- ORTALAMA MALİYET -->
+
+                <div>
+
+                  <small>
+                    Ortalama maliyet
+                  </small>
+
+                  <b>
+
+                    ${num(
+                      x.avgCost,
+                      decimals
+                    )}
+                    ₺
+
+                  </b>
+
+                </div>
+
+
+                <!-- TOPLAM MALİYET -->
+
+                <div>
+
+                  <small>
+                    Toplam maliyet
+                  </small>
+
+                  <b>
+
+                    ${money(
+                      x.cost
+                    )}
+
+                  </b>
+
+                </div>
+
+
+                <!-- GÜNLÜK K/Z -->
+
+                <div>
+
+                  <small>
+                    Günlük K/Z
+                  </small>
+
+                  <b class="${dailyClass}">
+
+                    <span class="dailyInline">
+
+                      ${money(
+                        x.dailyProfit
+                      )}
+
+                      <span class="dailyInlinePercent">
+
+                        (${pct(
+                          x.dailyProfitPercent
+                        )})
+
+                      </span>
+
+                    </span>
+
+                  </b>
+
+                </div>
+
+
+                <!-- TOPLAM K/Z -->
+
+                <div>
+
+                  <small>
+                    Toplam K/Z
+                  </small>
+
+                  <b class="${totalClass}">
+
+                    ${money(
+                      x.profit
+                    )}
+
+                  </b>
+
+                </div>
+
+
+                <!-- TOPLAM GETİRİ -->
+
+                <div>
+
+                  <small>
+                    Toplam Getiri
+                  </small>
+
+                  <b class="${totalClass}">
+
+                    ${pct(
+                      x.profitPercent
+                    )}
+
+                  </b>
+
+                </div>
+
+
+                <!-- ÖNCEKİ FİYAT -->
+
+                <div>
+
+                  <small>
+                    Önceki fiyat
+                  </small>
+
+                  <b>
+
+                    ${
+                      x.previousPrice
+                        ? num(
+                            x.previousPrice,
+                            decimals
+                          ) +
+                          ' ₺'
+                        : '—'
+                    }
+
+                  </b>
+
+                </div>
+
+
+                <!-- VERİ TARİHİ -->
+
+                <div>
+
+                  <small>
+                    Veri tarihi
+                  </small>
+
+                  <b>
+
+                    ${
+                      x.priceDate ||
+                      '—'
+                    }
+
+                  </b>
+
+                </div>
+
+
+              </div>
+
 
             </div>
 
+          `;
 
-            <div>
-
-              <small>
-                Veri tarihi
-              </small>
-
-              <b>
-
-                ${
-                  x.priceDate||'—'
-                }
-
-              </b>
-
-            </div>
+        }
+      ).join('');
 
 
-          </div>
-
-        </div>
-
-        `;
-
-      }).join('');
-
-
-    /*
-      ALT DETAY
-    */
+    /* =========================
+       GENEL DETAY
+    ========================= */
 
     document.getElementById(
       'dValue'
-    ).textContent=
-      money(finalValue);
+    ).textContent =
+      money(
+        finalValue
+      );
 
 
     document.getElementById(
       'dCost'
-    ).textContent=
-      money(finalCost);
+    ).textContent =
+      money(
+        finalCost
+      );
 
 
     document.getElementById(
       'dProfit'
-    ).textContent=
-      money(finalProfit);
+    ).textContent =
+      money(
+        finalProfit
+      );
 
 
     document.getElementById(
       'dPct'
-    ).textContent=
-      pct(finalProfitPercent);
+    ).textContent =
+      pct(
+        finalProfitPercent
+      );
 
 
     document.getElementById(
       'dDaily'
-    ).textContent=
-      hasDaily
-      ?money(dailyTotal)
-      :'—';
+    ).textContent =
+
+      money(
+        finalDaily
+      ) +
+      ' (' +
+      pct(
+        finalDailyPercent
+      ) +
+      ')';
 
 
     document.getElementById(
       'dFunds'
-    ).textContent=
+    ).textContent =
       items.length;
 
 
     document.getElementById(
       'dQty'
-    ).textContent=
-      num(totalQty,0);
+    ).textContent =
+      num(
+        totalQty,
+        0
+      );
 
 
-    const latestDate=
+    const dates =
       items
-        .map(x=>x.priceDate)
+        .map(
+          x =>
+            x.priceDate
+        )
         .filter(Boolean)
-        .sort()
-        .pop();
+        .sort();
+
+
+    const latestDate =
+      dates.length
+        ? dates[
+            dates.length - 1
+          ]
+        : '—';
 
 
     document.getElementById(
       'dataDate'
-    ).textContent=
-      latestDate||
-      p.updatedAt||
-      '—';
+    ).textContent =
+      latestDate;
 
 
-    /*
-      GRAFİK
-    */
+    /* =========================
+       GRAFİK
+    ========================= */
 
-    drawChart(finalValue);
+    if(
+      typeof Chart !==
+      'undefined'
+    ){
+
+      drawChart(
+        finalValue
+      );
+
+    }
 
 
-    /*
-      ALT BİLGİ
-    */
+    /* =========================
+       ALT BİLGİ
+    ========================= */
 
     document.getElementById(
       'updated'
-    ).textContent=
-      'TEFAS son fiyat tarihi: '+
-      (latestDate||'—')+
+    ).textContent =
+
+      'TEFAS son fiyat tarihi: ' +
+      latestDate +
       ' · portfolio.json güncel';
 
 
-  }catch(error){
+  }
 
-    console.error(error);
+  catch(error){
+
+    console.error(
+      'PORTFÖY HATASI:',
+      error
+    );
 
 
     document.getElementById(
       'assets'
-    ).innerHTML=`
+    ).innerHTML = `
 
       <div class="error">
 
@@ -1392,7 +1938,7 @@ async function load(){
 
     document.getElementById(
       'updated'
-    ).textContent=
+    ).textContent =
       'portfolio.json okunamadı.';
 
   }
@@ -1400,16 +1946,23 @@ async function load(){
 }
 
 
-/*
-  GRAFİK
-*/
+/* =========================
+   GRAFİK
+========================= */
 
-function drawChart(value){
+function drawChart(
+  value
+){
 
-  const canvas=
+  const canvas =
     document.getElementById(
       'chart'
     );
+
+
+  if(!canvas){
+    return;
+  }
 
 
   if(chart){
@@ -1417,7 +1970,7 @@ function drawChart(value){
   }
 
 
-  chart=
+  chart =
     new Chart(
       canvas,
       {
@@ -1426,13 +1979,18 @@ function drawChart(value){
 
         data:{
 
-          labels:['Portföy'],
+          labels:[
+            'Portföy'
+          ],
 
           datasets:[{
 
-            data:[value],
+            data:[
+              value
+            ],
 
-            borderColor:'#83efb4',
+            borderColor:
+              '#83efb4',
 
             backgroundColor:
               'rgba(83,226,157,.16)',
@@ -1469,9 +2027,10 @@ function drawChart(value){
               callbacks:{
 
                 label:
-                  c=>money(
-                    c.parsed.y
-                  )
+                  context =>
+                    money(
+                      context.parsed.y
+                    )
 
               }
 
@@ -1499,9 +2058,9 @@ function drawChart(value){
 }
 
 
-/*
-  BAŞLAT
-*/
+/* =========================
+   BAŞLAT
+========================= */
 
 load();
 
