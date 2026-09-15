@@ -29,14 +29,8 @@ HEADERS = {
 }
 
 
-def get_value(item, names):
-    for name in names:
-        if name in item and item[name] not in (None, ""):
-            return item[name]
-    return None
-
-
 def get_price(code, date):
+
     date_str = date.strftime("%Y%m%d")
 
     payload = {
@@ -60,6 +54,7 @@ def get_price(code, date):
     }
 
     try:
+
         r = requests.post(
             TEFAS_URL,
             json=payload,
@@ -67,7 +62,11 @@ def get_price(code, date):
             timeout=30
         )
 
-        print(f"{code} {date.strftime('%d.%m.%Y')}: HTTP {r.status_code}")
+        print(
+            f"{code} "
+            f"{date.strftime('%d.%m.%Y')} "
+            f"HTTP {r.status_code}"
+        )
 
         if r.status_code != 200:
             return None
@@ -75,8 +74,11 @@ def get_price(code, date):
         data = r.json()
 
         if isinstance(data, list):
+
             records = data
+
         elif isinstance(data, dict):
+
             records = []
 
             for key in [
@@ -86,10 +88,14 @@ def get_price(code, date):
                 "fonlar",
                 "dataList"
             ]:
+
                 if isinstance(data.get(key), list):
+
                     records = data[key]
                     break
+
         else:
+
             records = []
 
         for item in records:
@@ -97,200 +103,354 @@ def get_price(code, date):
             if not isinstance(item, dict):
                 continue
 
-            fund_code = get_value(
-                item,
-                [
-                    "fonKodu",
-                    "FonKodu",
-                    "fonkod",
-                    "code",
-                    "kod"
-                ]
-            )
+            code_keys = [
+                "fonKodu",
+                "FonKodu",
+                "fonkod",
+                "code",
+                "kod"
+            ]
+
+            fund_code = None
+
+            for key in code_keys:
+
+                if item.get(key) not in (None, ""):
+
+                    fund_code = item.get(key)
+                    break
 
             if str(fund_code).upper() != code.upper():
                 continue
 
-            price = get_value(
-                item,
-                [
-                    "fiyat",
-                    "FonFiyat",
-                    "fonFiyat",
-                    "birimPayDegeri",
-                    "payDegeri",
-                    "price"
-                ]
-            )
+            price_keys = [
+                "fiyat",
+                "FonFiyat",
+                "fonFiyat",
+                "birimPayDegeri",
+                "payDegeri",
+                "price"
+            ]
+
+            price = None
+
+            for key in price_keys:
+
+                if item.get(key) not in (None, ""):
+
+                    price = item.get(key)
+                    break
 
             if price is None:
                 continue
 
             try:
+
                 price = float(
                     str(price).replace(",", ".")
                 )
+
             except:
+
                 continue
 
             if price <= 0:
                 continue
 
-            return price
-
-    except Exception as e:
-        print(f"{code}: {e}")
-
-    return None
-
-
-def find_prices(code):
-
-    today = datetime.now()
-
-    # Bugün + son 4 gün.
-    # Hafta sonu / tatil durumunda son geçerli fiyatı bulur.
-    for i in range(5):
-
-        date = today - timedelta(days=i)
-
-        price = get_price(code, date)
-
-        if price is not None:
             return {
                 "price": price,
                 "date": date.strftime("%Y-%m-%d")
             }
 
+    except Exception as e:
+
+        print(
+            f"{code} hata: {e}"
+        )
+
     return None
+
+
+def get_last_prices(code):
+
+    today = datetime.now()
+
+    results = []
+
+    # Son 7 takvim günü içerisinden
+    # iki farklı geçerli TEFAS fiyatı bul.
+    for i in range(7):
+
+        date = today - timedelta(days=i)
+
+        result = get_price(code, date)
+
+        if result:
+
+            results.append(result)
+
+            if len(results) == 2:
+
+                break
+
+    if len(results) == 0:
+
+        return None, None
+
+    if len(results) == 1:
+
+        return results[0], None
+
+    # En yeni = current
+    # İkinci = previous
+    return results[0], results[1]
 
 
 def main():
 
     print()
-    print("=" * 55)
-    print("          TEFAS PORTFÖY GÜNCELLEME")
-    print("=" * 55)
+    print("=" * 60)
+    print("             TEFAS PORTFÖY GÜNCELLEME")
+    print("=" * 60)
     print()
 
     assets = {}
 
     for code, info in FUNDS.items():
 
-        print(f"{code}: güncel fiyat aranıyor...")
+        print()
+        print(f"--- {code} ---")
 
-        result = find_prices(code)
+        current, previous = get_last_prices(code)
 
-        if result is None:
-            print(f"❌ {code}: fiyat bulunamadı.")
+        if current is None:
+
+            print(
+                f"❌ {code}: güncel fiyat alınamadı."
+            )
+
             raise SystemExit(1)
 
         quantity = info["quantity"]
         avg_cost = info["avg_cost"]
-        current_price = result["price"]
+
+        current_price = current["price"]
+
+        if previous:
+
+            previous_price = previous["price"]
+            previous_date = previous["date"]
+
+        else:
+
+            previous_price = current_price
+            previous_date = current["date"]
 
         cost = quantity * avg_cost
+
         value = quantity * current_price
 
         profit = value - cost
 
         profit_percent = (
             profit / cost * 100
-            if cost else 0
+            if cost
+            else 0
         )
 
+        daily_profit = (
+            current_price - previous_price
+        ) * quantity
+
+        daily_percent = (
+            (current_price / previous_price) - 1
+        ) * 100 if previous_price else 0
+
         assets[code] = {
+
             "code": code,
+
             "quantity": quantity,
+
             "avgCost": avg_cost,
 
             "currentPrice": current_price,
 
+            "previousPrice": previous_price,
+
+            "priceDate": current["date"],
+
+            "previousPriceDate": previous_date,
+
             "cost": round(cost, 2),
+
             "value": round(value, 2),
 
             "profit": round(profit, 2),
-            "profitPercent": round(profit_percent, 4),
 
-            "dailyProfit": None,
-            "dailyProfitPercent": None,
+            "profitPercent": round(
+                profit_percent,
+                4
+            ),
 
-            "priceDate": result["date"]
+            "dailyProfit": round(
+                daily_profit,
+                2
+            ),
+
+            "dailyProfitPercent": round(
+                daily_percent,
+                4
+            )
         }
 
         print(
-            f"✅ {code}: "
-            f"{current_price:.6f} TL"
+            f"Mevcut : {current_price:.6f} TL"
         )
 
+        print(
+            f"Önceki : {previous_price:.6f} TL"
+        )
+
+        print(
+            f"Günlük : {daily_profit:+,.2f} TL"
+        )
+
+        print(
+            f"Toplam : {profit:+,.2f} TL"
+        )
+
+    # GENEL PORTFÖY
+
     total_cost = sum(
-        x["cost"] for x in assets.values()
+        x["cost"]
+        for x in assets.values()
     )
 
     total_value = sum(
-        x["value"] for x in assets.values()
+        x["value"]
+        for x in assets.values()
     )
 
-    total_profit = total_value - total_cost
+    total_profit = (
+        total_value -
+        total_cost
+    )
 
     total_profit_percent = (
-        total_profit / total_cost * 100
-        if total_cost else 0
+        total_profit /
+        total_cost *
+        100
+        if total_cost
+        else 0
+    )
+
+    daily_profit = sum(
+        x["dailyProfit"]
+        for x in assets.values()
+    )
+
+    previous_total_value = (
+        total_value -
+        daily_profit
+    )
+
+    daily_profit_percent = (
+        daily_profit /
+        previous_total_value *
+        100
+        if previous_total_value
+        else 0
     )
 
     portfolio = {
+
         "currency": "TRY",
 
-        "updatedAt": datetime.now().isoformat(),
+        "updatedAt":
+            datetime.now().isoformat(),
 
         "assets": assets,
 
         "summary": {
-            "totalCost": round(total_cost, 2),
-            "totalValue": round(total_value, 2),
-            "totalProfit": round(total_profit, 2),
-            "totalProfitPercent": round(
-                total_profit_percent,
-                4
-            )
+
+            "totalCost":
+                round(
+                    total_cost,
+                    2
+                ),
+
+            "totalValue":
+                round(
+                    total_value,
+                    2
+                ),
+
+            "totalProfit":
+                round(
+                    total_profit,
+                    2
+                ),
+
+            "totalProfitPercent":
+                round(
+                    total_profit_percent,
+                    4
+                ),
+
+            "dailyProfit":
+                round(
+                    daily_profit,
+                    2
+                ),
+
+            "dailyProfitPercent":
+                round(
+                    daily_profit_percent,
+                    4
+                )
         }
     }
 
-    Path("portfolio.json").write_text(
+    Path(
+        "portfolio.json"
+    ).write_text(
+
         json.dumps(
             portfolio,
             ensure_ascii=False,
             indent=2
         ),
+
         encoding="utf-8"
     )
 
     print()
-    print("=" * 55)
-    print("✅ PORTFÖY GÜNCELLENDİ")
-    print("=" * 55)
+    print("=" * 60)
+    print("                ✅ TAMAMLANDI")
+    print("=" * 60)
 
     print(
-        f"Toplam maliyet : "
-        f"{total_cost:,.2f} TL"
-    )
-
-    print(
-        f"Toplam değer   : "
+        f"Toplam değer : "
         f"{total_value:,.2f} TL"
     )
 
     print(
-        f"Genel K/Z      : "
-        f"{total_profit:,.2f} TL"
+        f"Günlük K/Z   : "
+        f"{daily_profit:+,.2f} TL"
     )
 
     print(
-        f"Genel getiri   : "
+        f"Genel K/Z    : "
+        f"{total_profit:+,.2f} TL"
+    )
+
+    print(
+        f"Genel getiri : "
         f"%{total_profit_percent:.2f}"
     )
 
-    print("=" * 55)
+    print("=" * 60)
 
 
 if __name__ == "__main__":
