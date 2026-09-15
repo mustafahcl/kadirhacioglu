@@ -5,140 +5,1228 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#080b14">
 <title>Portföyüm — TLY & THF</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+
 <style>
-:root{--bg:#05070c;--panel:#0b1220;--panel2:#0e1728;--line:#1b2536;--text:#f4f6fb;--muted:#8d96a8;--blue:#78a7ff;--green:#71e7ae;--red:#ff6f83;--purple:#8c65ff}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% -10%,#111d35 0,#06080d 42%,#030407 100%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif}
-.app{width:min(920px,100%);margin:auto;padding:20px 18px 50px}.top{display:flex;justify-content:space-between;align-items:flex-start}.hello{font-size:16px;color:#dfe4ee}.hello b{display:block;font-size:24px;margin-top:3px;color:#fff}.icons{display:flex;gap:16px;color:#70a2ff;font-size:25px}.subtitle{text-align:center;color:#77a5ff;font-weight:600;margin-top:30px;letter-spacing:.4px}.total{text-align:center;font-size:39px;font-weight:750;letter-spacing:-1.3px;margin-top:10px}.total span{font-size:19px;color:#9ba3b3;font-weight:500}.gain{text-align:center;color:var(--green);font-size:18px;margin-top:5px}.small{text-align:center;color:#727b8e;font-size:13px;margin-top:4px}
-.chartWrap{height:300px;margin:5px -4px 0;position:relative}.range{text-align:center;margin-top:-3px}.range span{display:inline-block;padding:8px 18px;border-radius:15px;color:#aab2c0}.range .active{background:#363d4b;color:#fff}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:25px 0 36px}.btn{background:#0c1930;border:0;border-radius:18px;color:#74a5ff;padding:16px;font-size:16px;font-weight:600}
-h2{font-size:23px;margin:0 0 20px}.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:22px}.metric{padding:0 14px;border-right:1px solid var(--line)}.metric:first-child{padding-left:0}.metric:last-child{border:0}.label{color:#a1a8b5;font-size:14px;margin-bottom:7px}.value{font-size:20px;font-weight:650}.positive{color:var(--green)}.negative{color:var(--red)}
-.assetsHead{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.link{color:#77a5ff;font-size:15px}.allocation{display:flex;height:6px;border-radius:10px;overflow:hidden;background:#20283a;margin:8px 0 22px}.seg{height:100%}.tly{background:#8c65ff}.thf{background:#f1a24a}
-.asset{display:grid;grid-template-columns:54px 1fr auto;gap:14px;align-items:center;padding:16px 0;border-bottom:1px solid #111823}.logo{width:50px;height:50px;border-radius:50%;display:grid;place-items:center;background:#101520;border:1px solid #20283a;font-weight:800;font-size:15px}.asset h3{margin:0;font-size:19px}.asset .sub{margin-top:4px;color:#9098a8;font-size:13px}.right{text-align:right}.price{font-size:19px;font-weight:650}.ret{font-size:13px;margin-top:4px}
-.detail{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px;padding:13px;background:#080e18;border-radius:14px;grid-column:2/4}.detail div{min-width:0}.detail b{display:block;font-size:14px}.detail small{color:#737c8e;font-size:11px}
-.card{background:linear-gradient(180deg,#0a111e,#080d16);border:1px solid #121c2b;border-radius:22px;padding:20px;margin-top:24px}.card h3{margin:0 0 15px;font-size:18px}.table{width:100%;border-collapse:collapse}.table td{padding:11px 0;border-bottom:1px solid #141c29;color:#b3bac6;font-size:14px}.table td:last-child{text-align:right;color:#fff;font-weight:600}.updated{color:#6f788a;font-size:12px;text-align:center;margin-top:24px}
-@media(max-width:620px){.app{padding:18px 15px 45px}.total{font-size:34px}.chartWrap{height:245px}.summary{grid-template-columns:1fr 1fr 1fr}.metric{padding:0 9px}.value{font-size:16px}.label{font-size:12px}.asset{grid-template-columns:50px 1fr auto}.detail{grid-column:1/4;grid-template-columns:repeat(2,1fr);margin-top:4px}.price{font-size:17px}.actions{margin-bottom:28px}.top .icons{font-size:22px}}
+:root{
+--bg:#05070c;
+--panel:#0b1220;
+--panel2:#0e1728;
+--line:#1b2536;
+--text:#f4f6fb;
+--muted:#8d96a8;
+--blue:#78a7ff;
+--green:#71e7ae;
+--red:#ff6f83;
+--purple:#8c65ff
+}
+
+*{box-sizing:border-box}
+
+body{
+margin:0;
+background:
+radial-gradient(circle at 50% -10%,#111d35 0,#06080d 42%,#030407 100%);
+color:var(--text);
+font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif
+}
+
+.app{
+width:min(920px,100%);
+margin:auto;
+padding:20px 18px 50px
+}
+
+.top{
+display:flex;
+justify-content:space-between;
+align-items:flex-start
+}
+
+.hello{
+font-size:16px;
+color:#dfe4ee
+}
+
+.hello b{
+display:block;
+font-size:24px;
+margin-top:3px;
+color:#fff
+}
+
+.icons{
+display:flex;
+gap:16px;
+color:#70a2ff;
+font-size:25px
+}
+
+.subtitle{
+text-align:center;
+color:#77a5ff;
+font-weight:600;
+margin-top:30px;
+letter-spacing:.4px
+}
+
+.total{
+text-align:center;
+font-size:39px;
+font-weight:750;
+letter-spacing:-1.3px;
+margin-top:10px
+}
+
+.total span{
+font-size:19px;
+color:#9ba3b3;
+font-weight:500
+}
+
+.gain{
+text-align:center;
+font-size:18px;
+margin-top:5px
+}
+
+.small{
+text-align:center;
+color:#727b8e;
+font-size:13px;
+margin-top:4px
+}
+
+.chartWrap{
+height:300px;
+margin:5px -4px 0;
+position:relative
+}
+
+.range{
+text-align:center;
+margin-top:-3px
+}
+
+.range span{
+display:inline-block;
+padding:8px 18px;
+border-radius:15px;
+color:#aab2c0
+}
+
+.range .active{
+background:#363d4b;
+color:#fff
+}
+
+.actions{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:14px;
+margin:25px 0 36px
+}
+
+.btn{
+background:#0c1930;
+border:0;
+border-radius:18px;
+color:#74a5ff;
+padding:16px;
+font-size:16px;
+font-weight:600
+}
+
+h2{
+font-size:23px;
+margin:0 0 20px
+}
+
+.summary{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:0;
+border-bottom:1px solid var(--line);
+padding-bottom:20px;
+margin-bottom:22px
+}
+
+.metric{
+padding:0 14px;
+border-right:1px solid var(--line);
+margin-bottom:18px
+}
+
+.metric:first-child{
+padding-left:0
+}
+
+.metric:nth-child(3){
+border-right:0
+}
+
+.label{
+color:#a1a8b5;
+font-size:14px;
+margin-bottom:7px
+}
+
+.value{
+font-size:20px;
+font-weight:650
+}
+
+.positive{
+color:var(--green)
+}
+
+.negative{
+color:var(--red)
+}
+
+.assetsHead{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:12px
+}
+
+.link{
+color:#77a5ff;
+font-size:15px
+}
+
+.allocation{
+display:flex;
+height:6px;
+border-radius:10px;
+overflow:hidden;
+background:#20283a;
+margin:8px 0 22px
+}
+
+.seg{
+height:100%
+}
+
+.tly{
+background:#8c65ff
+}
+
+.thf{
+background:#f1a24a
+}
+
+.asset{
+display:grid;
+grid-template-columns:54px 1fr auto;
+gap:14px;
+align-items:center;
+padding:16px 0;
+border-bottom:1px solid #111823
+}
+
+.logo{
+width:50px;
+height:50px;
+border-radius:50%;
+display:grid;
+place-items:center;
+background:#101520;
+border:1px solid #20283a;
+font-weight:800;
+font-size:15px
+}
+
+.asset h3{
+margin:0;
+font-size:19px
+}
+
+.asset .sub{
+margin-top:4px;
+color:#9098a8;
+font-size:13px
+}
+
+.right{
+text-align:right
+}
+
+.price{
+font-size:19px;
+font-weight:650
+}
+
+.ret{
+font-size:13px;
+margin-top:4px
+}
+
+.detail{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:8px;
+margin-top:14px;
+padding:13px;
+background:#080e18;
+border-radius:14px;
+grid-column:2/4
+}
+
+.detail div{
+min-width:0
+}
+
+.detail b{
+display:block;
+font-size:14px
+}
+
+.detail small{
+color:#737c8e;
+font-size:11px
+}
+
+.card{
+background:linear-gradient(180deg,#0a111e,#080d16);
+border:1px solid #121c2b;
+border-radius:22px;
+padding:20px;
+margin-top:24px
+}
+
+.card h3{
+margin:0 0 15px;
+font-size:18px
+}
+
+.table{
+width:100%;
+border-collapse:collapse
+}
+
+.table td{
+padding:11px 0;
+border-bottom:1px solid #141c29;
+color:#b3bac6;
+font-size:14px
+}
+
+.table td:last-child{
+text-align:right;
+color:#fff;
+font-weight:600
+}
+
+.updated{
+color:#6f788a;
+font-size:12px;
+text-align:center;
+margin-top:24px
+}
+
+.loading{
+text-align:center;
+color:#788397;
+padding:30px 0
+}
+
+@media(max-width:620px){
+
+.app{
+padding:18px 15px 45px
+}
+
+.total{
+font-size:34px
+}
+
+.chartWrap{
+height:245px
+}
+
+.summary{
+grid-template-columns:1fr 1fr 1fr
+}
+
+.metric{
+padding:0 9px
+}
+
+.metric:nth-child(3){
+border-right:0
+}
+
+.value{
+font-size:16px
+}
+
+.label{
+font-size:12px
+}
+
+.asset{
+grid-template-columns:50px 1fr auto
+}
+
+.detail{
+grid-column:1/4;
+grid-template-columns:repeat(2,1fr);
+margin-top:4px
+}
+
+.price{
+font-size:17px
+}
+
+.actions{
+margin-bottom:28px
+}
+
+.top .icons{
+font-size:22px
+}
+
+}
 </style>
 </head>
+
 <body>
+
 <div class="app">
-  <div class="top">
-    <div class="hello">İyi akşamlar,<b id="owner">Portföyüm</b></div>
-    <div class="icons">＋ ✨ ⋯</div>
-  </div>
-  <div class="subtitle">YATIRIM FONLARI⌄</div>
-  <div class="total" id="totalValue">— <span>TRY⌄</span></div>
-  <div class="gain" id="topGain">—</div>
-  <div class="small" id="topGainLabel">Toplam Kar/Zarar</div>
-  <div class="chartWrap"><canvas id="chart"></canvas></div>
-  <div class="range"><span class="active">TÜMÜ</span></div>
 
-  <div class="actions"><button class="btn">◔ &nbsp; Detaylı Analiz</button><button class="btn">⇄ &nbsp; Kıyasla</button></div>
-
-  <h2>Genel Özet</h2>
-  <div class="summary">
-    <div class="metric"><div class="label">Toplam Kar/Zarar</div><div class="value positive" id="profit">—</div></div>
-    <div class="metric"><div class="label">Günlük Kar/Zarar</div><div class="value positive" id="daily">—</div></div>
-    <div class="metric"><div class="label">Toplam Maliyet</div><div class="value" id="cost">—</div></div>
-    <div class="metric"><div class="label">Toplam Kar/Zarar %</div><div class="value positive" id="profitPct">—</div></div>
-    <div class="metric"><div class="label">Günlük Kar/Zarar %</div><div class="value positive" id="dailyPct">—</div></div>
-    <div class="metric"><div class="label">Karlı Pozisyon</div><div class="value" id="positions">—</div></div>
-  </div>
-
-  <div class="assetsHead"><h2 style="margin:0">Sahip Olduğum Varlıklar</h2><div class="link">Günlük Kar / Zarar ↔</div></div>
-  <div class="allocation"><div id="allocTly" class="seg tly"></div><div id="allocThf" class="seg thf"></div></div>
-  <div id="assets"></div>
-
-  <div class="card">
-    <h3>Genel Portföy Detayları</h3>
-    <table class="table">
-      <tr><td>Toplam portföy değeri</td><td id="dValue">—</td></tr>
-      <tr><td>Toplam yatırım maliyeti</td><td id="dCost">—</td></tr>
-      <tr><td>Toplam kar / zarar</td><td id="dProfit">—</td></tr>
-      <tr><td>Toplam getiri</td><td id="dPct">—</td></tr>
-      <tr><td>Bugünkü kar / zarar</td><td id="dDaily">—</td></tr>
-      <tr><td>Bugünkü getiri</td><td id="dDailyPct">—</td></tr>
-      <tr><td>Portföydeki fon sayısı</td><td>2</td></tr>
-      <tr><td>Toplam adet</td><td id="dQty">—</td></tr>
-      <tr><td>Veri tarihi</td><td id="dataDate">—</td></tr>
-    </table>
-  </div>
-  <div class="updated" id="updated">TEFAS verisi bekleniyor…</div>
+<div class="top">
+<div class="hello">
+İyi akşamlar,
+<b id="owner">Portföyüm</b>
 </div>
 
+<div class="icons">
+＋ ✨ ⋯
+</div>
+</div>
+
+<div class="subtitle">
+YATIRIM FONLARI⌄
+</div>
+
+<div class="total" id="totalValue">
+— <span>TRY⌄</span>
+</div>
+
+<div class="gain" id="topGain">
+—
+</div>
+
+<div class="small">
+Toplam Kar/Zarar
+</div>
+
+<div class="chartWrap">
+<canvas id="chart"></canvas>
+</div>
+
+<div class="range">
+<span class="active">TÜMÜ</span>
+</div>
+
+<div class="actions">
+
+<button class="btn">
+◔ &nbsp; Detaylı Analiz
+</button>
+
+<button class="btn">
+⇄ &nbsp; Kıyasla
+</button>
+
+</div>
+
+<h2>
+Genel Özet
+</h2>
+
+<div class="summary">
+
+<div class="metric">
+<div class="label">Toplam Kar/Zarar</div>
+<div class="value" id="profit">—</div>
+</div>
+
+<div class="metric">
+<div class="label">Günlük Kar/Zarar</div>
+<div class="value" id="daily">—</div>
+</div>
+
+<div class="metric">
+<div class="label">Toplam Maliyet</div>
+<div class="value" id="cost">—</div>
+</div>
+
+<div class="metric">
+<div class="label">Toplam Kar/Zarar %</div>
+<div class="value" id="profitPct">—</div>
+</div>
+
+<div class="metric">
+<div class="label">Günlük Kar/Zarar %</div>
+<div class="value" id="dailyPct">—</div>
+</div>
+
+<div class="metric">
+<div class="label">Karlı Pozisyon</div>
+<div class="value" id="positions">—</div>
+</div>
+
+</div>
+
+<div class="assetsHead">
+
+<h2 style="margin:0">
+Sahip Olduğum Varlıklar
+</h2>
+
+<div class="link">
+Günlük Kar / Zarar
+</div>
+
+</div>
+
+<div class="allocation">
+<div id="allocTly" class="seg tly"></div>
+<div id="allocThf" class="seg thf"></div>
+</div>
+
+<div id="assets">
+<div class="loading">
+Portföy yükleniyor...
+</div>
+</div>
+
+<div class="card">
+
+<h3>
+Genel Portföy Detayları
+</h3>
+
+<table class="table">
+
+<tr>
+<td>Toplam portföy değeri</td>
+<td id="dValue">—</td>
+</tr>
+
+<tr>
+<td>Toplam yatırım maliyeti</td>
+<td id="dCost">—</td>
+</tr>
+
+<tr>
+<td>Toplam kar / zarar</td>
+<td id="dProfit">—</td>
+</tr>
+
+<tr>
+<td>Toplam getiri</td>
+<td id="dPct">—</td>
+</tr>
+
+<tr>
+<td>Bugünkü kar / zarar</td>
+<td id="dDaily">—</td>
+</tr>
+
+<tr>
+<td>Bugünkü getiri</td>
+<td id="dDailyPct">—</td>
+</tr>
+
+<tr>
+<td>Portföydeki fon sayısı</td>
+<td id="dFundCount">—</td>
+</tr>
+
+<tr>
+<td>Toplam adet</td>
+<td id="dQty">—</td>
+</tr>
+
+<tr>
+<td>Veri tarihi</td>
+<td id="dataDate">—</td>
+</tr>
+
+</table>
+
+</div>
+
+<div class="updated" id="updated">
+TEFAS verisi bekleniyor…
+</div>
+
+</div>
+
+
 <script>
-const money=(n,d=2)=>new Intl.NumberFormat('tr-TR',{minimumFractionDigits:d,maximumFractionDigits:d}).format(n)+' ₺';
-const num=(n,d=2)=>new Intl.NumberFormat('tr-TR',{minimumFractionDigits:d,maximumFractionDigits:d}).format(n);
-const pct=n=>(n>=0?'+':'')+num(n,2)+'%';
+
+const money = (n,d=2) =>
+new Intl.NumberFormat('tr-TR',{
+minimumFractionDigits:d,
+maximumFractionDigits:d
+}).format(Number(n)||0)+' ₺';
+
+
+const num = (n,d=2) =>
+new Intl.NumberFormat('tr-TR',{
+minimumFractionDigits:d,
+maximumFractionDigits:d
+}).format(Number(n)||0);
+
+
+const pct = n =>
+(Number(n)>=0?'+':'')+
+num(Number(n)||0,2)+'%';
+
+
+function setColor(element,value){
+
+element.classList.remove('positive','negative');
+
+if(Number(value)>0){
+element.classList.add('positive');
+}
+
+if(Number(value)<0){
+element.classList.add('negative');
+}
+
+}
+
+
 let chart;
 
+
 async function load(){
-  const [p,t,h]=await Promise.all([
-    fetch('portfolio.json?'+Date.now()).then(r=>r.json()),
-    fetch('tly-history.json?'+Date.now()).then(r=>r.json()),
-    fetch('thf-history.json?'+Date.now()).then(r=>r.json())
-  ]);
-  const hist={TLY:t,THF:h};
-  let value=0,cost=0,daily=0,qty=0,profPos=0,lastDate='';
-  const items=p.assets.map(a=>{
-    const rows=hist[a.code]||[], latest=rows[rows.length-1], prev=rows[rows.length-2];
-    const price=latest?.price||0, previous=prev?.price||price;
-    const val=price*a.quantity, c=a.avgCost*a.quantity, gain=val-c, dg=(price-previous)*a.quantity;
-    if(latest?.date) lastDate=latest.date;
-    value+=val; cost+=c; daily+=dg; qty+=a.quantity; if(gain>=0) profPos++;
-    return {...a,price,previous,val,c,gain,dg, totalPct:c?gain/c*100:0, dailyPct:previous?(price/previous-1)*100:0};
-  });
-  const profit=value-cost, profitPct=cost?profit/cost*100:0, dailyPct=value-daily?daily/(value-daily)*100:0;
-  document.getElementById('owner').textContent=p.owner||'Portföyüm';
-  document.getElementById('totalValue').innerHTML=money(value)+' <span>TRY⌄</span>';
-  document.getElementById('topGain').textContent=money(profit);
-  document.getElementById('profit').textContent=money(profit);
-  document.getElementById('daily').textContent=money(daily);
-  document.getElementById('cost').textContent=money(cost);
-  document.getElementById('profitPct').textContent=pct(profitPct);
-  document.getElementById('dailyPct').textContent=pct(dailyPct);
-  document.getElementById('positions').textContent=profPos+'/'+items.length;
-  document.getElementById('dValue').textContent=money(value); document.getElementById('dCost').textContent=money(cost);
-  document.getElementById('dProfit').textContent=money(profit); document.getElementById('dPct').textContent=pct(profitPct);
-  document.getElementById('dDaily').textContent=money(daily); document.getElementById('dDailyPct').textContent=pct(dailyPct);
-  document.getElementById('dQty').textContent=num(qty,0); document.getElementById('dataDate').textContent=lastDate||'—';
-  const tlyVal=items.find(x=>x.code==='TLY')?.val||0, thfVal=items.find(x=>x.code==='THF')?.val||0;
-  document.getElementById('allocTly').style.width=(value?tlyVal/value*100:0)+'%';
-  document.getElementById('allocThf').style.width=(value?thfVal/value*100:0)+'%';
 
-  document.getElementById('assets').innerHTML=items.map(x=>`
-    <div class="asset">
-      <div class="logo">${x.code}</div>
-      <div><h3>${x.code}</h3><div class="sub">${x.quantity.toLocaleString('tr-TR')} adet · Ortalama maliyet ${num(x.avgCost, x.code==='THF'?6:2)} ₺</div></div>
-      <div class="right"><div class="price">${money(x.val)}</div><div class="ret ${x.gain>=0?'positive':'negative'}">${money(x.gain)} (${pct(x.totalPct)})</div></div>
-      <div class="detail">
-        <div><small>Adet</small><b>${num(x.quantity,0)}</b></div>
-        <div><small>Güncel fiyat</small><b>${num(x.price, x.code==='THF'?6:2)} ₺</b></div>
-        <div><small>Maliyet</small><b>${money(x.c)}</b></div>
-        <div><small>Günlük</small><b class="${x.dg>=0?'positive':'negative'}">${money(x.dg)}</b></div>
-      </div>
-    </div>`).join('');
-  document.getElementById('updated').textContent='TEFAS son fiyat tarihi: '+lastDate+' · Sayfa açılışında güncel JSON okunur';
+try{
 
-  // Overall portfolio history, based on daily NAV histories and fixed quantities.
-  const dates=[...new Set([...t,...h].map(x=>x.date))].sort();
-  const tmap=Object.fromEntries(t.map(x=>[x.date,x.price])), hmap=Object.fromEntries(h.map(x=>[x.date,x.price]));
-  const labels=[], vals=[];
-  let lt=null,lh=null;
-  for(const d of dates){
-    if(tmap[d]!=null) lt=tmap[d]; if(hmap[d]!=null) lh=hmap[d];
-    if(lt!=null&&lh!=null){labels.push(d); vals.push(lt*14+lh*1922)}
-  }
-  draw(labels,vals);
+/*
+SADECE portfolio.json okunuyor.
+Artık:
+tly-history.json
+thf-history.json
+
+gerekmiyor.
+*/
+
+const response =
+await fetch('portfolio.json?cache='+Date.now());
+
+if(!response.ok){
+
+throw new Error(
+'portfolio.json bulunamadı: HTTP '+response.status
+);
+
 }
-function draw(labels,vals){
-  const ctx=document.getElementById('chart');
-  if(chart) chart.destroy();
-  chart=new Chart(ctx,{type:'line',data:{labels,datasets:[{data:vals,borderColor:'#83efb4',backgroundColor:'rgba(83,226,157,.16)',borderWidth:2,pointRadius:0,fill:true,tension:.35}]},
-  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{mode:'index',intersect:false,callbacks:{label:c=>money(c.parsed.y)}}},
-  scales:{x:{display:false},y:{display:false}},interaction:{mode:'index',intersect:false}}});
+
+const p = await response.json();
+
+
+if(!p.assets){
+
+throw new Error(
+'portfolio.json içerisinde assets bulunamadı.'
+);
+
 }
-load().catch(e=>{console.error(e);document.getElementById('updated').textContent='Veri yüklenemedi. GitHub Actions ve JSON dosyalarını kontrol edin.'});
+
+
+const assets =
+Array.isArray(p.assets)
+? p.assets
+: Object.entries(p.assets).map(
+([code,a])=>({
+...a,
+code: a.code || code
+})
+);
+
+
+let value = 0;
+let cost = 0;
+let daily = 0;
+let qty = 0;
+let profitable = 0;
+
+
+const items = assets.map(a=>{
+
+const quantity =
+Number(a.quantity)||0;
+
+
+const avgCost =
+Number(
+a.avgCost ??
+a.avg_cost ??
+0
+);
+
+
+const price =
+Number(
+a.currentPrice ??
+a.price ??
+0
+);
+
+
+const assetCost =
+Number(
+a.cost ??
+(quantity*avgCost)
+);
+
+
+const assetValue =
+Number(
+a.value ??
+(quantity*price)
+);
+
+
+const gain =
+Number(
+a.profit ??
+(assetValue-assetCost)
+);
+
+
+const gainPct =
+Number(
+a.profitPercent ??
+a.profitPct ??
+(assetCost ? gain/assetCost*100 : 0)
+);
+
+
+/*
+Günlük veri artık history dosyasından gelmiyor.
+Workflow günlük değişimi portfolio.json'a yazarsa
+buradan otomatik okunur.
+Yoksa — gösterilir.
+*/
+
+const dailyGain =
+a.dailyProfit !== undefined
+? Number(a.dailyProfit)
+: a.daily !== undefined
+? Number(a.daily)
+: null;
+
+
+const dailyPercent =
+a.dailyProfitPercent !== undefined
+? Number(a.dailyProfitPercent)
+: a.dailyPct !== undefined
+? Number(a.dailyPct)
+: null;
+
+
+value += assetValue;
+cost += assetCost;
+qty += quantity;
+
+
+if(gain>=0){
+profitable++;
+}
+
+
+if(dailyGain !== null){
+daily += dailyGain;
+}
+
+
+return{
+
+...a,
+
+code:a.code,
+
+quantity,
+
+avgCost,
+
+price,
+
+assetCost,
+
+assetValue,
+
+gain,
+
+gainPct,
+
+dailyGain,
+
+dailyPercent
+
+};
+
+});
+
+
+const profit =
+Number(
+p.summary?.totalProfit ??
+(value-cost)
+);
+
+
+const profitPct =
+Number(
+p.summary?.totalProfitPercent ??
+(cost ? profit/cost*100 : 0)
+);
+
+
+const totalValue =
+Number(
+p.summary?.totalValue ??
+value
+);
+
+
+const totalCost =
+Number(
+p.summary?.totalCost ??
+cost
+);
+
+
+const hasDaily =
+items.some(x=>x.dailyGain!==null);
+
+
+const calculatedDailyPct =
+hasDaily && totalValue-daily !== 0
+? daily/(totalValue-daily)*100
+: null;
+
+
+/* OWNER */
+
+document.getElementById('owner').textContent =
+p.owner || 'Portföyüm';
+
+
+/* TOPLAM */
+
+document.getElementById('totalValue').innerHTML =
+money(totalValue)+' <span>TRY⌄</span>';
+
+
+document.getElementById('topGain').textContent =
+money(profit);
+
+setColor(
+document.getElementById('topGain'),
+profit
+);
+
+
+/* ÖZET */
+
+document.getElementById('profit').textContent =
+money(profit);
+
+setColor(
+document.getElementById('profit'),
+profit
+);
+
+
+document.getElementById('daily').textContent =
+hasDaily ? money(daily) : '—';
+
+if(hasDaily){
+
+setColor(
+document.getElementById('daily'),
+daily
+);
+
+}
+
+
+document.getElementById('cost').textContent =
+money(totalCost);
+
+
+document.getElementById('profitPct').textContent =
+pct(profitPct);
+
+setColor(
+document.getElementById('profitPct'),
+profitPct
+);
+
+
+document.getElementById('dailyPct').textContent =
+calculatedDailyPct === null
+? '—'
+: pct(calculatedDailyPct);
+
+
+if(calculatedDailyPct!==null){
+
+setColor(
+document.getElementById('dailyPct'),
+calculatedDailyPct
+);
+
+}
+
+
+document.getElementById('positions').textContent =
+profitable+'/'+items.length;
+
+
+/* DETAY */
+
+document.getElementById('dValue').textContent =
+money(totalValue);
+
+
+document.getElementById('dCost').textContent =
+money(totalCost);
+
+
+document.getElementById('dProfit').textContent =
+money(profit);
+
+setColor(
+document.getElementById('dProfit'),
+profit
+);
+
+
+document.getElementById('dPct').textContent =
+pct(profitPct);
+
+
+document.getElementById('dDaily').textContent =
+hasDaily ? money(daily) : '—';
+
+
+document.getElementById('dDailyPct').textContent =
+calculatedDailyPct === null
+? '—'
+: pct(calculatedDailyPct);
+
+
+document.getElementById('dFundCount').textContent =
+items.length;
+
+
+document.getElementById('dQty').textContent =
+num(qty,0);
+
+
+/* TARİH */
+
+const updated =
+p.updatedAt ||
+p.updated_at ||
+'';
+
+
+const date =
+items
+.map(x=>x.priceDate)
+.find(Boolean);
+
+
+document.getElementById('dataDate').textContent =
+date || updated || '—';
+
+
+/* ALLOCATION */
+
+const tly =
+items.find(x=>x.code==='TLY');
+
+
+const thf =
+items.find(x=>x.code==='THF');
+
+
+const tlyValue =
+tly ? tly.assetValue : 0;
+
+
+const thfValue =
+thf ? thf.assetValue : 0;
+
+
+document.getElementById('allocTly').style.width =
+(totalValue ? tlyValue/totalValue*100 : 0)+'%';
+
+
+document.getElementById('allocThf').style.width =
+(totalValue ? thfValue/totalValue*100 : 0)+'%';
+
+
+/* VARLIKLAR */
+
+document.getElementById('assets').innerHTML =
+items.map(x=>{
+
+const priceDecimals =
+x.code==='THF' ? 6 : 2;
+
+
+const dailyHTML =
+x.dailyGain===null
+? '—'
+: money(x.dailyGain);
+
+
+const dailyClass =
+x.dailyGain===null
+? ''
+: x.dailyGain>=0
+? 'positive'
+: 'negative';
+
+
+return `
+
+<div class="asset">
+
+<div class="logo">
+${x.code}
+</div>
+
+
+<div>
+
+<h3>
+${x.code}
+</h3>
+
+<div class="sub">
+${num(x.quantity,0)} adet
+· Ortalama maliyet
+${num(x.avgCost,priceDecimals)} ₺
+</div>
+
+</div>
+
+
+<div class="right">
+
+<div class="price">
+${money(x.assetValue)}
+</div>
+
+<div class="ret ${
+x.gain>=0?'positive':'negative'
+}">
+
+${money(x.gain)}
+(${pct(x.gainPct)})
+
+</div>
+
+</div>
+
+
+<div class="detail">
+
+<div>
+<small>Adet</small>
+<b>
+${num(x.quantity,0)}
+</b>
+</div>
+
+
+<div>
+<small>Güncel fiyat</small>
+<b>
+${num(x.price,priceDecimals)} ₺
+</b>
+</div>
+
+
+<div>
+<small>Maliyet</small>
+<b>
+${money(x.assetCost)}
+</b>
+</div>
+
+
+<div>
+<small>Günlük</small>
+<b class="${dailyClass}">
+${dailyHTML}
+</b>
+</div>
+
+</div>
+
+</div>
+
+`;
+
+}).join('');
+
+
+/*
+HISTORY OLMADIĞI İÇİN GRAFİK:
+Mevcut portföy değerini tek nokta olarak gösteriyoruz.
+Böylece grafik alanı boş kalmıyor.
+*/
+
+drawChart(totalValue);
+
+
+document.getElementById('updated').textContent =
+'TEFAS son fiyat tarihi: '+
+(date || '—')+
+' · portfolio.json güncel';
+
+
+}catch(error){
+
+console.error(error);
+
+document.getElementById('assets').innerHTML = `
+
+<div class="loading">
+
+Portföy verisi yüklenemedi.
+
+<br><br>
+
+<small>
+${error.message}
+</small>
+
+</div>
+
+`;
+
+document.getElementById('updated').textContent =
+'portfolio.json okunamadı.';
+
+}
+
+}
+
+
+/* GRAFİK */
+
+function drawChart(value){
+
+const canvas =
+document.getElementById('chart');
+
+
+if(!canvas){
+return;
+}
+
+
+if(chart){
+chart.destroy();
+}
+
+
+chart = new Chart(canvas,{
+
+type:'line',
+
+data:{
+
+labels:['Portföy'],
+
+datasets:[{
+
+data:[value],
+
+borderColor:'#83efb4',
+
+backgroundColor:'rgba(83,226,157,.16)',
+
+borderWidth:2,
+
+pointRadius:4,
+
+pointBackgroundColor:'#83efb4',
+
+fill:true,
+
+tension:.35
+
+}]
+
+},
+
+options:{
+
+responsive:true,
+
+maintainAspectRatio:false,
+
+plugins:{
+
+legend:{
+display:false
+},
+
+tooltip:{
+
+callbacks:{
+
+label:
+context =>
+money(context.parsed.y)
+
+}
+
+}
+
+},
+
+scales:{
+
+x:{
+display:false
+},
+
+y:{
+display:false
+}
+
+}
+
+}
+
+});
+
+}
+
+
+/* BAŞLAT */
+
+load();
+
 </script>
+
 </body>
 </html>
