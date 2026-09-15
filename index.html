@@ -1,414 +1,397 @@
 <!doctype html>
 <html lang="tr">
 <head>
-
 <meta charset="utf-8">
-
-<meta name="viewport"
-content="width=device-width,initial-scale=1,viewport-fit=cover">
-
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#080b14">
-
 <title>Portföyüm — TLY & THF</title>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
-
 <style>
-
 :root{
---bg:#05070c;
---panel:#0b1220;
---panel2:#0e1728;
---line:#1b2536;
---text:#f4f6fb;
---muted:#8d96a8;
---blue:#78a7ff;
---green:#71e7ae;
---red:#ff6f83;
---purple:#8c65ff;
+  --bg:#05070c;
+  --panel:#0b1220;
+  --line:#1b2536;
+  --text:#f4f6fb;
+  --muted:#8d96a8;
+  --blue:#78a7ff;
+  --green:#71e7ae;
+  --red:#ff6f83;
+  --purple:#8c65ff;
+  --orange:#f1a24a;
 }
 
-*{
-box-sizing:border-box;
-}
+*{box-sizing:border-box}
 
 body{
-margin:0;
-background:
-radial-gradient(
-circle at 50% -10%,
-#111d35 0,
-#06080d 42%,
-#030407 100%
-);
-color:var(--text);
-font-family:
--apple-system,
-BlinkMacSystemFont,
-"SF Pro Display",
-"Segoe UI",
-sans-serif;
+  margin:0;
+  background:
+    radial-gradient(circle at 50% -10%,#111d35 0,#06080d 42%,#030407 100%);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
 }
 
 .app{
-width:min(920px,100%);
-margin:auto;
-padding:20px 18px 50px;
+  width:min(920px,100%);
+  margin:auto;
+  padding:20px 18px 50px;
 }
 
 .top{
-display:flex;
-justify-content:space-between;
-align-items:flex-start;
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
 }
 
 .hello{
-font-size:16px;
-color:#dfe4ee;
+  font-size:16px;
+  color:#dfe4ee;
 }
 
 .hello b{
-display:block;
-font-size:24px;
-margin-top:3px;
-color:#fff;
+  display:block;
+  font-size:24px;
+  margin-top:3px;
+  color:#fff;
 }
 
 .icons{
-display:flex;
-gap:16px;
-color:#70a2ff;
-font-size:25px;
+  display:flex;
+  gap:16px;
+  color:#70a2ff;
+  font-size:25px;
 }
 
 .subtitle{
-text-align:center;
-color:#77a5ff;
-font-weight:600;
-margin-top:30px;
-letter-spacing:.4px;
+  text-align:center;
+  color:#77a5ff;
+  font-weight:600;
+  margin-top:30px;
+  letter-spacing:.4px;
 }
 
 .total{
-text-align:center;
-font-size:39px;
-font-weight:750;
-letter-spacing:-1.3px;
-margin-top:10px;
+  text-align:center;
+  font-size:39px;
+  font-weight:750;
+  letter-spacing:-1.3px;
+  margin-top:10px;
 }
 
 .total span{
-font-size:19px;
-color:#9ba3b3;
-font-weight:500;
+  font-size:19px;
+  color:#9ba3b3;
+  font-weight:500;
 }
 
 .dailyMain{
-text-align:center;
-font-size:18px;
-font-weight:600;
-margin-top:6px;
+  text-align:center;
+  font-size:18px;
+  font-weight:650;
+  margin-top:7px;
 }
 
 .dailyLabel{
-text-align:center;
-color:#727b8e;
-font-size:13px;
-margin-top:3px;
+  text-align:center;
+  color:#727b8e;
+  font-size:13px;
+  margin-top:4px;
 }
 
 .chartWrap{
-height:300px;
-margin:5px -4px 0;
-position:relative;
+  height:300px;
+  margin:8px -4px 0;
+  position:relative;
 }
 
 .range{
-text-align:center;
-margin-top:-3px;
+  text-align:center;
+  margin-top:-3px;
 }
 
 .range span{
-display:inline-block;
-padding:8px 18px;
-border-radius:15px;
-color:#aab2c0;
+  display:inline-block;
+  padding:8px 18px;
+  border-radius:15px;
+  color:#aab2c0;
 }
 
 .range .active{
-background:#363d4b;
-color:#fff;
+  background:#363d4b;
+  color:#fff;
 }
 
 .actions{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:14px;
-margin:25px 0 36px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+  margin:25px 0 36px;
 }
 
 .btn{
-background:#0c1930;
-border:0;
-border-radius:18px;
-color:#74a5ff;
-padding:16px;
-font-size:16px;
-font-weight:600;
+  background:#0c1930;
+  border:0;
+  border-radius:18px;
+  color:#74a5ff;
+  padding:16px;
+  font-size:16px;
+  font-weight:600;
 }
 
 h2{
-font-size:23px;
-margin:0 0 20px;
+  font-size:23px;
+  margin:0 0 20px;
 }
 
 .summary{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:0;
-border-bottom:1px solid var(--line);
-padding-bottom:20px;
-margin-bottom:28px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:0;
+  border-bottom:1px solid var(--line);
+  padding-bottom:5px;
+  margin-bottom:30px;
 }
 
 .metric{
-padding:0 14px;
-border-right:1px solid var(--line);
-margin-bottom:18px;
+  padding:0 14px;
+  border-right:1px solid var(--line);
+  margin-bottom:18px;
 }
 
 .metric:first-child{
-padding-left:0;
+  padding-left:0;
 }
 
 .metric:nth-child(3),
 .metric:nth-child(6){
-border-right:0;
+  border-right:0;
 }
 
 .label{
-color:#a1a8b5;
-font-size:14px;
-margin-bottom:7px;
+  color:#a1a8b5;
+  font-size:14px;
+  margin-bottom:7px;
 }
 
 .value{
-font-size:20px;
-font-weight:650;
+  font-size:20px;
+  font-weight:650;
 }
 
 .positive{
-color:var(--green);
+  color:var(--green)!important;
 }
 
 .negative{
-color:var(--red);
+  color:var(--red)!important;
 }
 
 .assetsHead{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:12px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:12px;
 }
 
 .link{
-color:#77a5ff;
-font-size:15px;
+  color:#77a5ff;
+  font-size:15px;
 }
 
 .allocation{
-display:flex;
-height:6px;
-border-radius:10px;
-overflow:hidden;
-background:#20283a;
-margin:8px 0 22px;
+  display:flex;
+  height:6px;
+  border-radius:10px;
+  overflow:hidden;
+  background:#20283a;
+  margin:8px 0 22px;
 }
 
 .seg{
-height:100%;
+  height:100%;
+  transition:width .5s ease;
 }
 
 .tly{
-background:#8c65ff;
+  background:var(--purple);
 }
 
 .thf{
-background:#f1a24a;
+  background:var(--orange);
 }
 
 .asset{
-display:grid;
-grid-template-columns:54px 1fr auto;
-gap:14px;
-align-items:center;
-padding:18px 0;
-border-bottom:1px solid #111823;
+  display:grid;
+  grid-template-columns:54px 1fr auto;
+  gap:14px;
+  align-items:center;
+  padding:18px 0;
+  border-bottom:1px solid #111823;
 }
 
 .logo{
-width:50px;
-height:50px;
-border-radius:50%;
-display:grid;
-place-items:center;
-background:#101520;
-border:1px solid #20283a;
-font-weight:800;
-font-size:15px;
+  width:50px;
+  height:50px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:#101520;
+  border:1px solid #20283a;
+  font-weight:800;
+  font-size:15px;
 }
 
 .asset h3{
-margin:0;
-font-size:19px;
+  margin:0;
+  font-size:19px;
 }
 
 .asset .sub{
-margin-top:5px;
-color:#9098a8;
-font-size:13px;
+  margin-top:5px;
+  color:#9098a8;
+  font-size:13px;
 }
 
 .right{
-text-align:right;
+  text-align:right;
 }
 
 .price{
-font-size:19px;
-font-weight:650;
+  font-size:19px;
+  font-weight:650;
 }
 
 .ret{
-font-size:13px;
-margin-top:4px;
+  font-size:13px;
+  margin-top:5px;
 }
 
 .detail{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:8px;
-margin-top:14px;
-padding:14px;
-background:#080e18;
-border-radius:14px;
-grid-column:2/4;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  margin-top:14px;
+  padding:14px;
+  background:#080e18;
+  border-radius:14px;
+  grid-column:2/4;
+}
+
+.detail div{
+  min-width:0;
 }
 
 .detail b{
-display:block;
-font-size:14px;
-margin-top:3px;
+  display:block;
+  font-size:14px;
+  margin-top:4px;
 }
 
 .detail small{
-color:#737c8e;
-font-size:11px;
+  color:#737c8e;
+  font-size:11px;
 }
 
 .card{
-background:
-linear-gradient(
-180deg,
-#0a111e,
-#080d16
-);
-border:1px solid #121c2b;
-border-radius:22px;
-padding:20px;
-margin-top:28px;
+  background:linear-gradient(180deg,#0a111e,#080d16);
+  border:1px solid #121c2b;
+  border-radius:22px;
+  padding:20px;
+  margin-top:28px;
 }
 
 .card h3{
-margin:0 0 15px;
-font-size:18px;
+  margin:0 0 15px;
+  font-size:18px;
 }
 
 .table{
-width:100%;
-border-collapse:collapse;
+  width:100%;
+  border-collapse:collapse;
 }
 
 .table td{
-padding:11px 0;
-border-bottom:1px solid #141c29;
-color:#b3bac6;
-font-size:14px;
+  padding:11px 0;
+  border-bottom:1px solid #141c29;
+  color:#b3bac6;
+  font-size:14px;
 }
 
 .table td:last-child{
-text-align:right;
-color:#fff;
-font-weight:600;
+  text-align:right;
+  color:#fff;
+  font-weight:600;
 }
 
 .updated{
-color:#6f788a;
-font-size:12px;
-text-align:center;
-margin-top:24px;
+  color:#6f788a;
+  font-size:12px;
+  text-align:center;
+  margin-top:24px;
 }
 
 .loading{
-text-align:center;
-padding:35px 0;
-color:#788397;
+  text-align:center;
+  color:#788397;
+  padding:35px 0;
+}
+
+.error{
+  text-align:center;
+  color:var(--red);
+  padding:30px 0;
 }
 
 @media(max-width:620px){
 
-.app{
-padding:18px 15px 45px;
-}
+  .app{
+    padding:18px 15px 45px;
+  }
 
-.total{
-font-size:34px;
-}
+  .total{
+    font-size:34px;
+  }
 
-.chartWrap{
-height:245px;
-}
+  .chartWrap{
+    height:245px;
+  }
 
-.summary{
-grid-template-columns:1fr 1fr 1fr;
-}
+  .summary{
+    grid-template-columns:1fr 1fr 1fr;
+  }
 
-.metric{
-padding:0 9px;
-}
+  .metric{
+    padding:0 9px;
+  }
 
-.value{
-font-size:16px;
-}
+  .value{
+    font-size:16px;
+  }
 
-.label{
-font-size:12px;
-}
+  .label{
+    font-size:12px;
+  }
 
-.asset{
-grid-template-columns:50px 1fr auto;
-}
+  .asset{
+    grid-template-columns:50px 1fr auto;
+  }
 
-.detail{
-grid-column:1/4;
-grid-template-columns:repeat(2,1fr);
-margin-top:5px;
-}
+  .detail{
+    grid-column:1/4;
+    grid-template-columns:repeat(2,1fr);
+  }
 
-.price{
-font-size:17px;
-}
+  .price{
+    font-size:17px;
+  }
 
-.actions{
-margin-bottom:28px;
-}
+  .actions{
+    margin-bottom:28px;
+  }
 
-.top .icons{
-font-size:22px;
+  .top .icons{
+    font-size:22px;
+  }
 }
-
-}
-
 </style>
 </head>
 
@@ -416,280 +399,252 @@ font-size:22px;
 
 <div class="app">
 
-<!-- ÜST -->
+  <!-- ÜST -->
+  <div class="top">
 
-<div class="top">
+    <div class="hello">
+      Merhaba,
+      <b id="owner">Kadir Hacıoğlu</b>
+    </div>
 
-<div class="hello">
-İyi akşamlar,
-<b id="owner">Portföyüm</b>
-</div>
+    <div class="icons">
+      ＋ ✨ ⋯
+    </div>
 
-<div class="icons">
-＋ ✨ ⋯
-</div>
+  </div>
 
-</div>
 
+  <!-- BAŞLIK -->
+  <div class="subtitle">
+   Portföy⌄
+  </div>
 
-<!-- FON BAŞLIĞI -->
 
-<div class="subtitle">
-YATIRIM FONLARI⌄
-</div>
+  <!-- ANA PORTFÖY DEĞERİ -->
+  <div class="total" id="totalValue">
+    —
+    <span>TRY⌄</span>
+  </div>
 
 
-<!-- ANA PORTFÖY DEĞERİ -->
+  <!-- GÜNLÜK K/Z -->
+  <div class="dailyMain" id="dailyMain">
+    —
+  </div>
 
-<div
-class="total"
-id="totalValue">
-—
-<span>TRY⌄</span>
-</div>
+  <div class="dailyLabel">
+    Günlük Kar / Zarar
+  </div>
 
 
-<!-- GÜNLÜK K/Z -->
+  <!-- GRAFİK -->
+  <div class="chartWrap">
+    <canvas id="chart"></canvas>
+  </div>
 
-<div
-class="dailyMain"
-id="dailyMain">
-—
-</div>
+  <div class="range">
+    <span class="active">TÜMÜ</span>
+  </div>
 
-<div class="dailyLabel">
-Günlük Kar / Zarar
-</div>
 
+  <!-- BUTONLAR -->
+  <div class="actions">
 
-<!-- GRAFİK -->
+    <button class="btn">
+      ◔ &nbsp; Detaylı Analiz
+    </button>
 
-<div class="chartWrap">
+    <button class="btn">
+      ⇄ &nbsp; Kıyasla
+    </button>
 
-<canvas id="chart"></canvas>
+  </div>
 
-</div>
 
+  <!-- GENEL ÖZET -->
+  <h2>
+    Genel Özet
+  </h2>
 
-<div class="range">
-<span class="active">
-TÜMÜ
-</span>
-</div>
+  <div class="summary">
 
+    <div class="metric">
 
-<div class="actions">
+      <div class="label">
+        Genel Kar / Zarar
+      </div>
 
-<button class="btn">
-◔ &nbsp; Detaylı Analiz
-</button>
+      <div class="value" id="profit">
+        —
+      </div>
 
-<button class="btn">
-⇄ &nbsp; Kıyasla
-</button>
+    </div>
 
-</div>
 
+    <div class="metric">
 
-<!-- GENEL ÖZET -->
+      <div class="label">
+        Genel Getiri
+      </div>
 
-<h2>
-Genel Özet
-</h2>
+      <div class="value" id="profitPct">
+        —
+      </div>
 
-<div class="summary">
+    </div>
 
-<div class="metric">
 
-<div class="label">
-Genel Kar / Zarar
-</div>
+    <div class="metric">
 
-<div
-class="value"
-id="profit">
-—
-</div>
+      <div class="label">
+        Toplam Maliyet
+      </div>
 
-</div>
+      <div class="value" id="cost">
+        —
+      </div>
 
+    </div>
 
-<div class="metric">
 
-<div class="label">
-Genel Getiri
-</div>
+    <div class="metric">
 
-<div
-class="value"
-id="profitPct">
-—
-</div>
+      <div class="label">
+        Portföy Değeri
+      </div>
 
-</div>
+      <div class="value" id="summaryValue">
+        —
+      </div>
 
+    </div>
 
-<div class="metric">
 
-<div class="label">
-Toplam Maliyet
-</div>
+    <div class="metric">
 
-<div
-class="value"
-id="cost">
-—
-</div>
+      <div class="label">
+        Günlük Kar / Zarar
+      </div>
 
-</div>
+      <div class="value" id="daily">
+        —
+      </div>
 
+    </div>
 
-<div class="metric">
 
-<div class="label">
-Portföy Değeri
-</div>
+    <div class="metric">
 
-<div
-class="value"
-id="summaryValue">
-—
-</div>
+      <div class="label">
+        Karlı Pozisyon
+      </div>
 
-</div>
+      <div class="value" id="positions">
+        —
+      </div>
 
+    </div>
 
-<div class="metric">
+  </div>
 
-<div class="label">
-Günlük Kar / Zarar
-</div>
 
-<div
-class="value"
-id="daily">
-—
-</div>
+  <!-- VARLIKLAR -->
+  <div class="assetsHead">
 
-</div>
+    <h2 style="margin:0">
+      Sahip Olduğum Varlıklar
+    </h2>
 
+    <div class="link">
+      TLY + THF
+    </div>
 
-<div class="metric">
+  </div>
 
-<div class="label">
-Karlı Pozisyon
-</div>
 
-<div
-class="value"
-id="positions">
-—
-</div>
+  <!-- DAĞILIM -->
+  <div class="allocation">
 
-</div>
+    <div
+      id="allocTly"
+      class="seg tly">
+    </div>
 
-</div>
+    <div
+      id="allocThf"
+      class="seg thf">
+    </div>
 
+  </div>
 
-<!-- VARLIKLAR -->
 
-<div class="assetsHead">
+  <!-- FONLAR -->
+  <div id="assets">
 
-<h2 style="margin:0">
-Sahip Olduğum Varlıklar
-</h2>
+    <div class="loading">
+      Fon bilgileri yükleniyor...
+    </div>
 
-<div class="link">
-TLY + THF
-</div>
+  </div>
 
-</div>
 
+  <!-- GENEL DETAY -->
+  <div class="card">
 
-<div class="allocation">
+    <h3>
+      Genel Portföy Detayları
+    </h3>
 
-<div
-id="allocTly"
-class="seg tly">
-</div>
+    <table class="table">
 
-<div
-id="allocThf"
-class="seg thf">
-</div>
+      <tr>
+        <td>Toplam portföy değeri</td>
+        <td id="dValue">—</td>
+      </tr>
 
-</div>
+      <tr>
+        <td>Toplam yatırım maliyeti</td>
+        <td id="dCost">—</td>
+      </tr>
 
+      <tr>
+        <td>Genel kar / zarar</td>
+        <td id="dProfit">—</td>
+      </tr>
 
-<div id="assets">
+      <tr>
+        <td>Genel getiri</td>
+        <td id="dPct">—</td>
+      </tr>
 
-<div class="loading">
-Fon bilgileri yükleniyor...
-</div>
+      <tr>
+        <td>Günlük kar / zarar</td>
+        <td id="dDaily">—</td>
+      </tr>
 
-</div>
+      <tr>
+        <td>Portföydeki fon sayısı</td>
+        <td id="dFunds">—</td>
+      </tr>
 
+      <tr>
+        <td>Toplam adet</td>
+        <td id="dQty">—</td>
+      </tr>
 
-<!-- PORTFÖY DETAY -->
+      <tr>
+        <td>Veri tarihi</td>
+        <td id="dataDate">—</td>
+      </tr>
 
-<div class="card">
+    </table>
 
-<h3>
-Genel Portföy Detayları
-</h3>
+  </div>
 
-<table class="table">
 
-<tr>
-<td>Toplam portföy değeri</td>
-<td id="dValue">—</td>
-</tr>
-
-<tr>
-<td>Toplam yatırım maliyeti</td>
-<td id="dCost">—</td>
-</tr>
-
-<tr>
-<td>Genel kar / zarar</td>
-<td id="dProfit">—</td>
-</tr>
-
-<tr>
-<td>Genel getiri</td>
-<td id="dPct">—</td>
-</tr>
-
-<tr>
-<td>Günlük kar / zarar</td>
-<td id="dDaily">—</td>
-</tr>
-
-<tr>
-<td>Portföydeki fon sayısı</td>
-<td id="dFunds">—</td>
-</tr>
-
-<tr>
-<td>Toplam adet</td>
-<td id="dQty">—</td>
-</tr>
-
-<tr>
-<td>Veri tarihi</td>
-<td id="dataDate">—</td>
-</tr>
-
-</table>
-
-</div>
-
-
-<div
-class="updated"
-id="updated">
-TEFAS verisi bekleniyor…
-</div>
+  <div class="updated" id="updated">
+    TEFAS verisi bekleniyor…
+  </div>
 
 </div>
 
@@ -698,728 +653,855 @@ TEFAS verisi bekleniyor…
 
 const money=(n,d=2)=>
 new Intl.NumberFormat(
-'tr-TR',
-{
-minimumFractionDigits:d,
-maximumFractionDigits:d
-}
+  'tr-TR',
+  {
+    minimumFractionDigits:d,
+    maximumFractionDigits:d
+  }
 ).format(Number(n)||0)+' ₺';
 
 
 const num=(n,d=2)=>
 new Intl.NumberFormat(
-'tr-TR',
-{
-minimumFractionDigits:d,
-maximumFractionDigits:d
-}
+  'tr-TR',
+  {
+    minimumFractionDigits:d,
+    maximumFractionDigits:d
+  }
 ).format(Number(n)||0);
 
 
 const pct=n=>
 (Number(n)>=0?'+':'')+
-num(n,2)+'%';
+num(Number(n)||0,2)+'%';
 
 
 function color(el,value){
 
-el.classList.remove(
-'positive',
-'negative'
-);
+  el.classList.remove(
+    'positive',
+    'negative'
+  );
 
-if(Number(value)>0)
-el.classList.add('positive');
+  if(Number(value)>0){
+    el.classList.add('positive');
+  }
 
-if(Number(value)<0)
-el.classList.add('negative');
+  if(Number(value)<0){
+    el.classList.add('negative');
+  }
 
 }
 
 
-let chart;
+let chart=null;
 
 
 async function load(){
 
-try{
+  try{
 
-const response=
-await fetch(
-'portfolio.json?'+Date.now()
-);
+    /*
+      SADECE portfolio.json
+    */
 
-if(!response.ok){
+    const response=await fetch(
+      'portfolio.json?cache='+Date.now()
+    );
 
-throw new Error(
-'portfolio.json bulunamadı'
-);
+    if(!response.ok){
+      throw new Error(
+        'portfolio.json bulunamadı. HTTP '+response.status
+      );
+    }
+
+    const p=await response.json();
+
+
+    /*
+      ASSET FORMATINI DESTEKLE
+    */
+
+    const assets=Array.isArray(p.assets)
+      ?p.assets
+      :Object.entries(p.assets||{})
+        .map(([code,a])=>({
+          ...a,
+          code:a.code||code
+        }));
+
+
+    if(!assets.length){
+      throw new Error(
+        'portfolio.json içinde fon bulunamadı.'
+      );
+    }
+
+
+    let totalValue=0;
+    let totalCost=0;
+    let totalQty=0;
+    let dailyTotal=0;
+    let profitable=0;
+    let hasDaily=false;
+
+
+    /*
+      FONLARI HESAPLA
+    */
+
+    const items=assets.map(a=>{
+
+      const quantity=
+        Number(a.quantity)||0;
+
+      const avgCost=
+        Number(
+          a.avgCost ??
+          a.avg_cost ??
+          0
+        );
+
+      const currentPrice=
+        Number(
+          a.currentPrice ??
+          a.price ??
+          0
+        );
+
+      const cost=
+        Number(
+          a.cost ??
+          quantity*avgCost
+        );
+
+      const value=
+        Number(
+          a.value ??
+          quantity*currentPrice
+        );
+
+      const profit=
+        Number(
+          a.profit ??
+          value-cost
+        );
+
+      const profitPercent=
+        Number(
+          a.profitPercent ??
+          (cost
+            ?profit/cost*100
+            :0)
+        );
+
+
+      /*
+        GÜNLÜK K/Z
+      */
+
+      const dailyProfit=
+        a.dailyProfit!==null &&
+        a.dailyProfit!==undefined
+          ?Number(a.dailyProfit)
+          :null;
+
+
+      const dailyProfitPercent=
+        a.dailyProfitPercent!==null &&
+        a.dailyProfitPercent!==undefined
+          ?Number(a.dailyProfitPercent)
+          :null;
+
+
+      if(dailyProfit!==null){
+
+        dailyTotal+=dailyProfit;
+        hasDaily=true;
+
+      }
+
+
+      totalValue+=value;
+      totalCost+=cost;
+      totalQty+=quantity;
+
+
+      if(profit>=0){
+        profitable++;
+      }
+
+
+      return{
+        ...a,
+
+        quantity,
+        avgCost,
+        currentPrice,
+        cost,
+        value,
+        profit,
+        profitPercent,
+        dailyProfit,
+        dailyProfitPercent
+      };
+
+    });
+
+
+    /*
+      GENEL SUMMARY
+    */
+
+    const summary=p.summary||{};
+
+
+    const finalValue=
+      Number(
+        summary.totalValue ??
+        totalValue
+      );
+
+
+    const finalCost=
+      Number(
+        summary.totalCost ??
+        totalCost
+      );
+
+
+    const finalProfit=
+      Number(
+        summary.totalProfit ??
+        (finalValue-finalCost)
+      );
+
+
+    const finalProfitPercent=
+      Number(
+        summary.totalProfitPercent ??
+        (
+          finalCost
+          ?finalProfit/finalCost*100
+          :0
+        )
+      );
+
+
+    /*
+      OWNER
+    */
+
+    document.getElementById(
+      'owner'
+    ).textContent=
+      p.owner||'Portföyüm';
+
+
+    /*
+      ANA PORTFÖY
+    */
+
+    document.getElementById(
+      'totalValue'
+    ).innerHTML=
+      money(finalValue)+
+      ' <span>TRY⌄</span>';
+
+
+    /*
+      GÜNLÜK ANA K/Z
+    */
+
+    const dailyMain=
+      document.getElementById(
+        'dailyMain'
+      );
+
+
+    if(
+      summary.dailyProfit!==null &&
+      summary.dailyProfit!==undefined
+    ){
+
+      dailyTotal=
+        Number(summary.dailyProfit);
+
+      hasDaily=true;
+
+    }
+
+
+    if(hasDaily){
+
+      dailyMain.textContent=
+        money(dailyTotal);
+
+      color(
+        dailyMain,
+        dailyTotal
+      );
+
+    }else{
+
+      dailyMain.textContent='—';
+
+    }
+
+
+    /*
+      GENEL ÖZET
+    */
+
+    const profitEl=
+      document.getElementById('profit');
+
+    profitEl.textContent=
+      money(finalProfit);
+
+    color(
+      profitEl,
+      finalProfit
+    );
+
+
+    const pctEl=
+      document.getElementById('profitPct');
+
+    pctEl.textContent=
+      pct(finalProfitPercent);
+
+    color(
+      pctEl,
+      finalProfitPercent
+    );
+
+
+    document.getElementById(
+      'cost'
+    ).textContent=
+      money(finalCost);
+
+
+    document.getElementById(
+      'summaryValue'
+    ).textContent=
+      money(finalValue);
+
+
+    const dailyEl=
+      document.getElementById(
+        'daily'
+      );
+
+
+    if(hasDaily){
+
+      dailyEl.textContent=
+        money(dailyTotal);
+
+      color(
+        dailyEl,
+        dailyTotal
+      );
+
+    }else{
+
+      dailyEl.textContent='—';
+
+    }
+
+
+    document.getElementById(
+      'positions'
+    ).textContent=
+      profitable+'/'+items.length;
+
+
+    /*
+      FON DAĞILIMI
+    */
+
+    const tly=
+      items.find(
+        x=>x.code==='TLY'
+      );
+
+    const thf=
+      items.find(
+        x=>x.code==='THF'
+      );
+
+
+    const tlyValue=
+      tly?tly.value:0;
+
+    const thfValue=
+      thf?thf.value:0;
+
+
+    document.getElementById(
+      'allocTly'
+    ).style.width=
+      (
+        finalValue
+        ? tlyValue/finalValue*100
+        :0
+      )+'%';
+
+
+    document.getElementById(
+      'allocThf'
+    ).style.width=
+      (
+        finalValue
+        ? thfValue/finalValue*100
+        :0
+      )+'%';
+
+
+    /*
+      FON KARTLARI
+    */
+
+    document.getElementById(
+      'assets'
+    ).innerHTML=
+
+      items.map(x=>{
+
+        const decimals=
+          x.code==='THF'
+          ?6
+          :2;
+
+
+        const dailyText=
+          x.dailyProfit===null
+          ?'—'
+          :money(x.dailyProfit);
+
+
+        const dailyClass=
+          x.dailyProfit===null
+          ?''
+          :x.dailyProfit>=0
+            ?'positive'
+            :'negative';
+
+
+        return`
+
+        <div class="asset">
+
+          <div class="logo">
+            ${x.code}
+          </div>
+
+
+          <div>
+
+            <h3>
+              ${x.code}
+            </h3>
+
+            <div class="sub">
+
+              ${num(x.quantity,0)}
+              adet
+
+              · Ortalama maliyet
+
+              ${num(x.avgCost,decimals)}
+              ₺
+
+            </div>
+
+          </div>
+
+
+          <div class="right">
+
+            <div class="price">
+              ${money(x.value)}
+            </div>
+
+            <div class="ret ${
+              x.profit>=0
+                ?'positive'
+                :'negative'
+            }">
+
+              ${money(x.profit)}
+
+              (${pct(x.profitPercent)})
+
+            </div>
+
+          </div>
+
+
+          <div class="detail">
+
+
+            <div>
+
+              <small>
+                Adet
+              </small>
+
+              <b>
+                ${num(x.quantity,0)}
+              </b>
+
+            </div>
+
+
+            <div>
+
+              <small>
+                Güncel fiyat
+              </small>
+
+              <b>
+                ${num(x.currentPrice,decimals)}
+                ₺
+              </b>
+
+            </div>
+
+
+            <div>
+
+              <small>
+                Maliyet
+              </small>
+
+              <b>
+                ${money(x.cost)}
+              </b>
+
+            </div>
+
+
+            <div>
+
+              <small>
+                Günlük K/Z
+              </small>
+
+              <b class="${dailyClass}">
+                ${dailyText}
+              </b>
+
+            </div>
+
+
+            <div>
+
+              <small>
+                Toplam K/Z
+              </small>
+
+              <b class="${
+                x.profit>=0
+                  ?'positive'
+                  :'negative'
+              }">
+
+                ${money(x.profit)}
+
+              </b>
+
+            </div>
+
+
+            <div>
+
+              <small>
+                Toplam Getiri
+              </small>
+
+              <b class="${
+                x.profit>=0
+                  ?'positive'
+                  :'negative'
+              }">
+
+                ${pct(x.profitPercent)}
+
+              </b>
+
+            </div>
+
+
+            <div>
+
+              <small>
+                Önceki fiyat
+              </small>
+
+              <b>
+
+                ${
+                  x.previousPrice!==undefined
+                  ?num(
+                      x.previousPrice,
+                      decimals
+                    )+' ₺'
+                  :'—'
+                }
+
+              </b>
+
+            </div>
+
+
+            <div>
+
+              <small>
+                Veri tarihi
+              </small>
+
+              <b>
+
+                ${
+                  x.priceDate||'—'
+                }
+
+              </b>
+
+            </div>
+
+
+          </div>
+
+        </div>
+
+        `;
+
+      }).join('');
+
+
+    /*
+      ALT DETAY
+    */
+
+    document.getElementById(
+      'dValue'
+    ).textContent=
+      money(finalValue);
+
+
+    document.getElementById(
+      'dCost'
+    ).textContent=
+      money(finalCost);
+
+
+    document.getElementById(
+      'dProfit'
+    ).textContent=
+      money(finalProfit);
+
+
+    document.getElementById(
+      'dPct'
+    ).textContent=
+      pct(finalProfitPercent);
+
+
+    document.getElementById(
+      'dDaily'
+    ).textContent=
+      hasDaily
+      ?money(dailyTotal)
+      :'—';
+
+
+    document.getElementById(
+      'dFunds'
+    ).textContent=
+      items.length;
+
+
+    document.getElementById(
+      'dQty'
+    ).textContent=
+      num(totalQty,0);
+
+
+    const latestDate=
+      items
+        .map(x=>x.priceDate)
+        .filter(Boolean)
+        .sort()
+        .pop();
+
+
+    document.getElementById(
+      'dataDate'
+    ).textContent=
+      latestDate||
+      p.updatedAt||
+      '—';
+
+
+    /*
+      GRAFİK
+    */
+
+    drawChart(finalValue);
+
+
+    /*
+      ALT BİLGİ
+    */
+
+    document.getElementById(
+      'updated'
+    ).textContent=
+      'TEFAS son fiyat tarihi: '+
+      (latestDate||'—')+
+      ' · portfolio.json güncel';
+
+
+  }catch(error){
+
+    console.error(error);
+
+
+    document.getElementById(
+      'assets'
+    ).innerHTML=`
+
+      <div class="error">
+
+        Portföy bilgileri yüklenemedi.
+
+        <br><br>
+
+        <small>
+          ${error.message}
+        </small>
+
+      </div>
+
+    `;
+
+
+    document.getElementById(
+      'updated'
+    ).textContent=
+      'portfolio.json okunamadı.';
+
+  }
 
 }
 
-const p=
-await response.json();
-
-
-const assets=
-Array.isArray(p.assets)
-?p.assets
-:Object.entries(
-p.assets||{}
-).map(
-([code,a])=>({
-...a,
-code:a.code||code
-})
-);
-
-
-if(!assets.length){
-
-throw new Error(
-'Portföyde fon bulunamadı.'
-);
-
-}
-
-
-let totalValue=0;
-let totalCost=0;
-let totalProfit=0;
-let dailyTotal=0;
-
-let totalQty=0;
-let profitable=0;
-
-let hasDaily=false;
-
-
-const items=
-assets.map(a=>{
-
-const quantity=
-Number(a.quantity)||0;
-
-const avgCost=
-Number(
-a.avgCost ??
-a.avg_cost ??
-0
-);
-
-const currentPrice=
-Number(
-a.currentPrice ??
-a.price ??
-0
-);
-
-const cost=
-Number(
-a.cost ??
-quantity*avgCost
-);
-
-const value=
-Number(
-a.value ??
-quantity*currentPrice
-);
-
-const profit=
-Number(
-a.profit ??
-value-cost
-);
-
-const profitPercent=
-Number(
-a.profitPercent ??
-(cost?profit/cost*100:0)
-);
-
-
-const dailyProfit=
-a.dailyProfit !== null &&
-a.dailyProfit !== undefined
-?Number(a.dailyProfit)
-:null;
-
-
-const dailyProfitPercent=
-a.dailyProfitPercent !== null &&
-a.dailyProfitPercent !== undefined
-?Number(a.dailyProfitPercent)
-:null;
-
-
-if(dailyProfit!==null){
-
-dailyTotal+=dailyProfit;
-
-hasDaily=true;
-
-}
-
-
-totalValue+=value;
-totalCost+=cost;
-totalProfit+=profit;
-totalQty+=quantity;
-
-
-if(profit>=0)
-profitable++;
-
-
-return{
-
-...a,
-
-quantity,
-avgCost,
-currentPrice,
-cost,
-value,
-profit,
-profitPercent,
-dailyProfit,
-dailyProfitPercent
-
-};
-
-});
-
 
 /*
-SUMMARY
-*/
-
-const summary=
-p.summary||{};
-
-
-const finalValue=
-Number(
-summary.totalValue ??
-totalValue
-);
-
-
-const finalCost=
-Number(
-summary.totalCost ??
-totalCost
-);
-
-
-const finalProfit=
-Number(
-summary.totalProfit ??
-totalProfit
-);
-
-
-const finalProfitPercent=
-Number(
-summary.totalProfitPercent ??
-(finalCost
-?finalProfit/finalCost*100
-:0)
-);
-
-
-/*
-ÜST PORTFÖY
-*/
-
-document.getElementById(
-'owner'
-).textContent=
-p.owner||'Portföyüm';
-
-
-document.getElementById(
-'totalValue'
-).innerHTML=
-money(finalValue)+
-' <span>TRY⌄</span>';
-
-
-const mainDaily=
-document.getElementById(
-'dailyMain'
-);
-
-
-if(hasDaily){
-
-mainDaily.textContent=
-money(dailyTotal);
-
-color(
-mainDaily,
-dailyTotal
-);
-
-}else{
-
-mainDaily.textContent='—';
-
-}
-
-
-/*
-GENEL ÖZET
-*/
-
-const profitEl=
-document.getElementById(
-'profit'
-);
-
-profitEl.textContent=
-money(finalProfit);
-
-color(
-profitEl,
-finalProfit
-);
-
-
-const pctEl=
-document.getElementById(
-'profitPct'
-);
-
-pctEl.textContent=
-pct(finalProfitPercent);
-
-color(
-pctEl,
-finalProfitPercent
-);
-
-
-document.getElementById(
-'cost'
-).textContent=
-money(finalCost);
-
-
-document.getElementById(
-'summaryValue'
-).textContent=
-money(finalValue);
-
-
-const dailyEl=
-document.getElementById(
-'daily'
-);
-
-if(hasDaily){
-
-dailyEl.textContent=
-money(dailyTotal);
-
-color(
-dailyEl,
-dailyTotal
-);
-
-}else{
-
-dailyEl.textContent='—';
-
-}
-
-
-document.getElementById(
-'positions'
-).textContent=
-profitable+'/'+items.length;
-
-
-/*
-VARLIK DAĞILIMI
-*/
-
-const tly=
-items.find(
-x=>x.code==='TLY'
-);
-
-const thf=
-items.find(
-x=>x.code==='THF'
-);
-
-
-const tlyValue=
-tly?tly.value:0;
-
-const thfValue=
-thf?thf.value:0;
-
-
-document.getElementById(
-'allocTly'
-).style.width=
-(finalValue?
-tlyValue/finalValue*100:0)+'%';
-
-
-document.getElementById(
-'allocThf'
-).style.width=
-(finalValue?
-thfValue/finalValue*100:0)+'%';
-
-
-/*
-FON KARTLARI
-*/
-
-document.getElementById(
-'assets'
-).innerHTML=
-items.map(x=>{
-
-const decimals=
-x.code==='THF'
-?6
-:2;
-
-
-const dailyText=
-x.dailyProfit===null
-?'—'
-:money(x.dailyProfit);
-
-
-const dailyClass=
-x.dailyProfit===null
-?''
-:x.dailyProfit>=0
-?'positive'
-:'negative';
-
-
-return`
-
-<div class="asset">
-
-<div class="logo">
-${x.code}
-</div>
-
-
-<div>
-
-<h3>
-${x.code}
-</h3>
-
-<div class="sub">
-
-${num(x.quantity,0)}
-adet
-
-·
-
-Ortalama maliyet
-
-${num(x.avgCost,decimals)}
-₺
-
-</div>
-
-</div>
-
-
-<div class="right">
-
-<div class="price">
-${money(x.value)}
-</div>
-
-<div class="ret ${
-x.profit>=0
-?'positive'
-:'negative'
-}">
-
-${money(x.profit)}
-
-(${pct(x.profitPercent)})
-
-</div>
-
-</div>
-
-
-<div class="detail">
-
-<div>
-
-<small>
-Adet
-</small>
-
-<b>
-${num(x.quantity,0)}
-</b>
-
-</div>
-
-
-<div>
-
-<small>
-Güncel fiyat
-</small>
-
-<b>
-${num(x.currentPrice,decimals)}
-₺
-</b>
-
-</div>
-
-
-<div>
-
-<small>
-Maliyet
-</small>
-
-<b>
-${money(x.cost)}
-</b>
-
-</div>
-
-
-<div>
-
-<small>
-Günlük K/Z
-</small>
-
-<b class="${dailyClass}">
-${dailyText}
-</b>
-
-</div>
-
-</div>
-
-</div>
-
-`;
-
-}).join('');
-
-
-/*
-ALT GENEL DETAY
-*/
-
-document.getElementById(
-'dValue'
-).textContent=
-money(finalValue);
-
-
-document.getElementById(
-'dCost'
-).textContent=
-money(finalCost);
-
-
-document.getElementById(
-'dProfit'
-).textContent=
-money(finalProfit);
-
-
-document.getElementById(
-'dPct'
-).textContent=
-pct(finalProfitPercent);
-
-
-document.getElementById(
-'dDaily'
-).textContent=
-hasDaily
-?money(dailyTotal)
-:'—';
-
-
-document.getElementById(
-'dFunds'
-).textContent=
-items.length;
-
-
-document.getElementById(
-'dQty'
-).textContent=
-num(totalQty,0);
-
-
-document.getElementById(
-'dataDate'
-).textContent=
-items[0]?.priceDate||
-p.updatedAt||
-'—';
-
-
-/*
-GRAFİK
-*/
-
-drawChart(finalValue);
-
-
-document.getElementById(
-'updated'
-).textContent=
-'TEFAS son fiyat tarihi: '+
-(items[0]?.priceDate||'—')+
-' · portfolio.json kullanılıyor';
-
-
-}catch(error){
-
-console.error(error);
-
-document.getElementById(
-'assets'
-).innerHTML=`
-
-<div class="loading">
-
-Portföy bilgileri yüklenemedi.
-
-<br><br>
-
-<small>
-${error.message}
-</small>
-
-</div>
-
-`;
-
-document.getElementById(
-'updated'
-).textContent=
-'portfolio.json okunamadı.';
-
-}
-
-}
-
-
-/*
-GRAFİK
+  GRAFİK
 */
 
 function drawChart(value){
 
-const ctx=
-document.getElementById(
-'chart'
-);
+  const canvas=
+    document.getElementById(
+      'chart'
+    );
 
 
-if(chart)
-chart.destroy();
+  if(chart){
+    chart.destroy();
+  }
 
 
-chart=
-new Chart(
-ctx,
-{
+  chart=
+    new Chart(
+      canvas,
+      {
 
-type:'line',
+        type:'line',
 
-data:{
+        data:{
 
-labels:['Portföy'],
+          labels:['Portföy'],
 
-datasets:[{
+          datasets:[{
 
-data:[value],
+            data:[value],
 
-borderColor:'#83efb4',
+            borderColor:'#83efb4',
 
-backgroundColor:
-'rgba(83,226,157,.16)',
+            backgroundColor:
+              'rgba(83,226,157,.16)',
 
-borderWidth:2,
+            borderWidth:2,
 
-pointRadius:4,
+            pointRadius:4,
 
-pointBackgroundColor:
-'#83efb4',
+            pointBackgroundColor:
+              '#83efb4',
 
-fill:true,
+            fill:true,
 
-tension:.35
+            tension:.35
 
-}]
+          }]
 
-},
+        },
 
-options:{
+        options:{
 
-responsive:true,
+          responsive:true,
 
-maintainAspectRatio:false,
+          maintainAspectRatio:false,
 
-plugins:{
+          plugins:{
 
-legend:{
-display:false
-},
+            legend:{
+              display:false
+            },
 
-tooltip:{
+            tooltip:{
 
-callbacks:{
+              callbacks:{
 
-label:c=>
-money(c.parsed.y)
+                label:
+                  c=>money(
+                    c.parsed.y
+                  )
+
+              }
+
+            }
+
+          },
+
+          scales:{
+
+            x:{
+              display:false
+            },
+
+            y:{
+              display:false
+            }
+
+          }
+
+        }
+
+      }
+    );
 
 }
 
-}
 
-},
-
-scales:{
-
-x:{
-display:false
-},
-
-y:{
-display:false
-}
-
-}
-
-}
-
-}
-);
-
-}
-
+/*
+  BAŞLAT
+*/
 
 load();
 
