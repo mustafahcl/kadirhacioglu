@@ -10,7 +10,9 @@ permissions:
   contents: write
 
 jobs:
+
   update:
+
     runs-on: ubuntu-latest
 
     steps:
@@ -28,27 +30,27 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests
 
-      - name: TEFAS verilerini güncelle
+      - name: Güncel TEFAS fiyatlarını çek
         run: |
           python update-data.py
 
-      - name: Git değişikliklerini kontrol et
+      - name: Portfolio JSON'u kaydet
         run: |
-          git status
-          git diff --stat
 
-      - name: Güncel verileri kaydet
-        run: |
           git config user.name "github-actions[bot]"
+
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           git add portfolio.json
-          git add tly-history.json
-          git add thf-history.json
 
           if git diff --cached --quiet; then
-            echo "Yeni veri yok."
+
+            echo "Yeni fiyat değişikliği yok."
+
           else
-            git commit -m "TEFAS fiyatlarını güncelle"
+
+            git commit -m "Güncel TEFAS fiyatları"
+
             git push
+
           fi
