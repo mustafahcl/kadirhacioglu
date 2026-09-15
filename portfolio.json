@@ -1,30 +1,34 @@
 {
-  "owner": "Mustafa Hacıoğlu",
   "currency": "TRY",
-  "totalCost": 139911.88,
-  "totalValue": 0,
-  "totalProfit": 0,
-  "totalProfitPercent": 0,
+  "updatedAt": "2026-09-15T13:47:14.941851",
   "assets": {
     "TLY": {
       "code": "TLY",
       "quantity": 14,
       "avgCost": 9593.9,
-      "price": 0,
+      "currentPrice": 10133.510887,
       "cost": 134314.6,
-      "value": 0,
-      "profit": 0,
-      "profitPercent": 0
+      "value": 141869.15,
+      "profit": 7554.55,
+      "profitPercent": 5.6245,
+      "priceDate": "2026-09-15"
     },
     "THF": {
       "code": "THF",
       "quantity": 1922,
       "avgCost": 2.912217,
-      "price": 0,
+      "currentPrice": 2.933679,
       "cost": 5597.28,
-      "value": 0,
-      "profit": 0,
-      "profitPercent": 0
+      "value": 5638.53,
+      "profit": 41.25,
+      "profitPercent": 0.737,
+      "priceDate": "2026-09-15"
     }
+  },
+  "summary": {
+    "totalCost": 139911.88,
+    "totalValue": 147507.68,
+    "totalProfit": 7595.8,
+    "totalProfitPercent": 5.429
   }
 }
