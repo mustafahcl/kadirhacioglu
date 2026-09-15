@@ -1,345 +1,248 @@
 import json
-import sys
-import time
+import requests
+from datetime import datetime, timedelta
 from pathlib import Path
 
-import requests
-
-
-ROOT = Path(__file__).resolve().parent
-PORTFOLIO_FILE = ROOT / "portfolio.json"
+TEFAS_URL = "https://www.tefas.gov.tr/api/funds/fonGnlBlgSiraliGetir"
 
 FUNDS = {
     "TLY": {
         "quantity": 14,
-        "avgCost": 9593.90
+        "avg_cost": 9593.90
     },
     "THF": {
         "quantity": 1922,
-        "avgCost": 2.912217
+        "avg_cost": 2.912217
     }
 }
-
-TEFAS_URL = "https://www.tefas.gov.tr/api/funds/fonGnlBlgSiraliGetir"
 
 HEADERS = {
     "Accept": "*/*",
     "Content-Type": "application/json",
     "Origin": "https://www.tefas.gov.tr",
-    "Referer": "https://www.tefas.gov.tr/",
+    "Referer": "https://www.tefas.gov.tr/tr/fon-verileri",
     "User-Agent": (
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-        "AppleWebKit/537.36 "
-        "(KHTML, like Gecko) "
-        "Chrome/140.0.0.0 Safari/537.36"
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/146.0.0.0 Safari/537.36"
     )
 }
 
 
-def get_latest_price(code):
+def get_tefas_price(code):
+    """
+    Sadece son kullanılabilir TEFAS fiyatını arar.
+    Geçmiş veri kaydetmez.
+    """
 
-    session = requests.Session()
-    session.headers.update(HEADERS)
+    today = datetime.now()
 
-    # Güncel tarihi almak için TEFAS'a istek.
-    # TEFAS tarafında güncel fiyat endpoint'i.
-    payload = {
-        "fontip": "YAT",
-        "fonkod": code,
-        "bastarih": "",
-        "bittarih": ""
-    }
+    # Bugün + son 4 gün.
+    # Hafta sonu / resmi tatilde son iş gününü yakalayabilmek için.
+    for days_back in range(5):
 
-    for attempt in range(3):
+        date = today - timedelta(days=days_back)
+        date_str = date.strftime("%Y%m%d")
+
+        payload = {
+            "fonTipi": "YAT",
+            "fonKodu": code,
+            "aramaMetni": None,
+            "fonTurKod": None,
+            "fonGrubu": None,
+            "sfonTurKod": None,
+            "fonTurAciklama": None,
+            "kurucuKod": None,
+            "basTarih": date_str,
+            "bitTarih": date_str,
+            "basSira": 1,
+            "bitSira": 100000,
+            "dil": "TR",
+            "sFonTurKod": "",
+            "fonKod": "",
+            "fonGrup": "",
+            "fonUnvanTip": ""
+        }
 
         try:
+            print(f"{code}: {date.strftime('%d.%m.%Y')} sorgulanıyor...")
 
-            print(f"{code}: TEFAS bağlantısı ({attempt + 1}/3)")
-
-            response = session.post(
+            response = requests.post(
                 TEFAS_URL,
                 json=payload,
-                timeout=20
+                headers=HEADERS,
+                timeout=30
             )
 
-            print(
-                f"{code}: HTTP {response.status_code}"
-            )
+            print(f"{code}: HTTP {response.status_code}")
 
             response.raise_for_status()
 
             data = response.json()
 
-            if isinstance(data, dict):
+            # TEFAS cevabını kontrol et
+            records = []
 
-                rows = (
-                    data.get("data")
-                    or data.get("resultList")
-                    or data.get("result")
-                    or []
-                )
+            if isinstance(data, list):
+                records = data
 
-            elif isinstance(data, list):
+            elif isinstance(data, dict):
+                for key in [
+                    "data",
+                    "items",
+                    "resultList",
+                    "fonlar",
+                    "dataList"
+                ]:
+                    value = data.get(key)
 
-                rows = data
+                    if isinstance(value, list):
+                        records = value
+                        break
 
-            else:
+            if not records:
+                print(f"{code}: Bu tarihte veri yok.")
+                continue
 
-                rows = []
+            # Fon kodunu bul
+            for item in records:
 
-            if not rows:
-                raise RuntimeError(
-                    f"{code}: TEFAS boş cevap döndürdü."
-                )
-
-            # Kod eşleşmesi
-            matching = []
-
-            for row in rows:
-
-                row_code = (
-                    row.get("fonkod")
-                    or row.get("fonKodu")
-                    or row.get("code")
-                    or row.get("kod")
-                )
-
-                if row_code:
-
-                    if str(row_code).upper() == code.upper():
-                        matching.append(row)
-
-            if matching:
-                rows = matching
-
-            # En son kullanılabilir fiyatı bul
-            for row in reversed(rows):
-
-                raw_price = (
-                    row.get("fiyat")
-                    or row.get("price")
-                    or row.get("fonFiyat")
-                    or row.get("birimPayDegeri")
-                )
-
-                if raw_price is None:
+                if not isinstance(item, dict):
                     continue
 
-                price_text = str(raw_price).strip()
+                fund_code = (
+                    item.get("fonKodu")
+                    or item.get("fund_code")
+                    or item.get("FonKodu")
+                    or item.get("code")
+                )
 
-                # Türkçe sayı formatı
-                if "," in price_text:
-                    price_text = price_text.replace(".", "")
-                    price_text = price_text.replace(",", ".")
+                if str(fund_code).upper() != code.upper():
+                    continue
 
-                price = float(price_text)
+                price = (
+                    item.get("fiyat")
+                    or item.get("price")
+                    or item.get("FonFiyat")
+                    or item.get("fonFiyat")
+                    or item.get("birimPayDegeri")
+                )
 
-                if price > 0:
+                if price is None:
+                    continue
 
-                    date_value = (
-                        row.get("tarih")
-                        or row.get("date")
-                        or row.get("fonTarih")
-                    )
+                price = float(price)
 
-                    return {
-                        "price": price,
-                        "date": str(date_value)
-                        if date_value else None
-                    }
+                if price <= 0:
+                    continue
 
-            raise RuntimeError(
-                f"{code}: Fiyat alanı bulunamadı."
-            )
+                print(
+                    f"✅ {code}: {price:.6f} TL "
+                    f"({date.strftime('%d.%m.%Y')})"
+                )
+
+                return {
+                    "price": price,
+                    "date": date.strftime("%Y-%m-%d")
+                }
 
         except Exception as e:
+            print(f"{code}: hata -> {e}")
 
-            print(
-                f"{code}: {e}"
-            )
-
-            if attempt < 2:
-                time.sleep(3)
-
-    raise RuntimeError(
-        f"{code}: TEFAS'tan güncel fiyat alınamadı."
-    )
-
-
-def calculate_asset(code, price):
-
-    quantity = FUNDS[code]["quantity"]
-    avg_cost = FUNDS[code]["avgCost"]
-
-    cost = quantity * avg_cost
-    value = quantity * price
-
-    profit = value - cost
-
-    if cost > 0:
-        profit_percent = (
-            profit / cost
-        ) * 100
-    else:
-        profit_percent = 0
-
-    return {
-        "code": code,
-        "quantity": quantity,
-        "avgCost": avg_cost,
-        "price": price,
-        "cost": round(cost, 6),
-        "value": round(value, 6),
-        "profit": round(profit, 6),
-        "profitPercent": round(
-            profit_percent,
-            4
-        )
-    }
+    return None
 
 
 def main():
 
-    print("")
     print("=" * 55)
     print("       TEFAS PORTFÖY GÜNCELLEME")
     print("=" * 55)
 
-    prices = {}
-
-    for code in FUNDS:
-
-        try:
-
-            prices[code] = get_latest_price(code)
-
-        except Exception as e:
-
-            print("")
-            print(f"❌ {code}: {e}")
-            sys.exit(1)
-
-
-    # -----------------------------------------------------
-    # VARLIKLARI HESAPLA
-    # -----------------------------------------------------
-
     assets = {}
 
-    total_cost = 0
-    total_value = 0
+    for code, info in FUNDS.items():
 
-    for code in FUNDS:
+        result = get_tefas_price(code)
 
-        price = prices[code]["price"]
+        if result is None:
+            print(f"\n❌ {code}: TEFAS'tan fiyat alınamadı.")
+            raise SystemExit(1)
 
-        asset = calculate_asset(
-            code,
-            price
+        quantity = info["quantity"]
+        avg_cost = info["avg_cost"]
+
+        price = result["price"]
+
+        cost = quantity * avg_cost
+        value = quantity * price
+
+        profit = value - cost
+
+        profit_percent = (
+            (profit / cost) * 100
+            if cost > 0 else 0
         )
 
-        assets[code] = asset
+        assets[code] = {
+            "code": code,
+            "quantity": quantity,
+            "avgCost": avg_cost,
+            "currentPrice": price,
+            "cost": round(cost, 2),
+            "value": round(value, 2),
+            "profit": round(profit, 2),
+            "profitPercent": round(profit_percent, 4),
+            "priceDate": result["date"]
+        }
 
-        total_cost += asset["cost"]
-        total_value += asset["value"]
-
-
-    total_profit = (
-        total_value - total_cost
+    total_cost = sum(
+        item["cost"]
+        for item in assets.values()
     )
 
-    if total_cost > 0:
+    total_value = sum(
+        item["value"]
+        for item in assets.values()
+    )
 
-        total_profit_percent = (
-            total_profit / total_cost
-        ) * 100
+    total_profit = total_value - total_cost
 
-    else:
-
-        total_profit_percent = 0
-
-
-    # -----------------------------------------------------
-    # PORTFOLIO.JSON
-    # -----------------------------------------------------
+    total_profit_percent = (
+        total_profit / total_cost * 100
+        if total_cost > 0 else 0
+    )
 
     portfolio = {
-
-        "owner": "Mustafa Hacıoğlu",
-
         "currency": "TRY",
-
-        "updatedAt": (
-            __import__("datetime")
-            .datetime.now()
-            .isoformat()
-        ),
-
-        "totalCost": round(
-            total_cost,
-            6
-        ),
-
-        "totalValue": round(
-            total_value,
-            6
-        ),
-
-        "totalProfit": round(
-            total_profit,
-            6
-        ),
-
-        "totalProfitPercent": round(
-            total_profit_percent,
-            4
-        ),
-
-        "assets": assets
+        "updatedAt": datetime.now().isoformat(),
+        "assets": assets,
+        "summary": {
+            "totalCost": round(total_cost, 2),
+            "totalValue": round(total_value, 2),
+            "totalProfit": round(total_profit, 2),
+            "totalProfitPercent": round(
+                total_profit_percent, 4
+            )
+        }
     }
 
-
-    with open(
-        PORTFOLIO_FILE,
-        "w",
-        encoding="utf-8"
-    ) as f:
-
-        json.dump(
+    Path("portfolio.json").write_text(
+        json.dumps(
             portfolio,
-            f,
             ensure_ascii=False,
             indent=2
-        )
+        ),
+        encoding="utf-8"
+    )
 
+    print("\n" + "=" * 55)
+    print("✅ PORTFÖY GÜNCELLENDİ")
+    print("=" * 55)
 
-    print("")
-    print("✓ PORTFOLIO.JSON GÜNCELLENDİ")
-    print("")
-    print(
-        f"TLY: {assets['TLY']['price']}"
-    )
-    print(
-        f"THF: {assets['THF']['price']}"
-    )
-    print("")
-    print(
-        f"Toplam maliyet: "
-        f"{total_cost:,.2f} TL"
-    )
-    print(
-        f"Portföy değeri: "
-        f"{total_value:,.2f} TL"
-    )
-    print(
-        f"Toplam kâr/zarar: "
-        f"{total_profit:,.2f} TL"
-    )
-    print(
-        f"Getiri: "
-        f"{total_profit_percent:.2f}%"
-    )
-    print("")
+    print(f"Toplam maliyet : {total_cost:,.2f} TL")
+    print(f"Güncel değer   : {total_value:,.2f} TL")
+    print(f"Toplam kâr/zarar: {total_profit:,.2f} TL")
+    print(f"Getiri         : %{total_profit_percent:.2f}")
     print("=" * 55)
 
 
