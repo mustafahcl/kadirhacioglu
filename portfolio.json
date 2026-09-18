@@ -1,6 +1,6 @@
 {
   "currency": "TRY",
-  "updatedAt": "2026-09-17T19:51:17.154730",
+  "updatedAt": "2026-09-18T07:11:29.566055",
   "assets": {
     "TLY": {
       "code": "TLY",
@@ -21,24 +21,24 @@
       "code": "THF",
       "quantity": 1922,
       "avgCost": 2.912217,
-      "currentPrice": 2.700585,
-      "previousPrice": 2.923361,
-      "priceDate": "2026-09-17",
-      "previousPriceDate": "2026-09-16",
+      "currentPrice": 2.305599,
+      "previousPrice": 2.700585,
+      "priceDate": "2026-09-18",
+      "previousPriceDate": "2026-09-17",
       "cost": 5597.28,
-      "value": 5190.52,
-      "profit": -406.76,
-      "profitPercent": -7.267,
-      "dailyProfit": -428.18,
-      "dailyProfitPercent": -7.6205
+      "value": 4431.36,
+      "profit": -1165.92,
+      "profitPercent": -20.8301,
+      "dailyProfit": -759.16,
+      "dailyProfitPercent": -14.6259
     }
   },
   "summary": {
     "totalCost": 139911.88,
-    "totalValue": 149516.06,
-    "totalProfit": 9604.18,
-    "totalProfitPercent": 6.8644,
-    "dailyProfit": 2028.21,
-    "dailyProfitPercent": 1.3752
+    "totalValue": 148756.9,
+    "totalProfit": 8845.02,
+    "totalProfitPercent": 6.3219,
+    "dailyProfit": 1697.23,
+    "dailyProfitPercent": 1.1541
   }
 }
