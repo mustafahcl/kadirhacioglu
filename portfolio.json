@@ -1,6 +1,6 @@
 {
   "currency": "TRY",
-  "updatedAt": "2026-09-21T16:30:04.085448",
+  "updatedAt": "2026-09-21T16:47:00.899974",
   "assets": {
     "TLY": {
       "code": "TLY",
@@ -22,15 +22,15 @@
       "quantity": 1922,
       "avgCost": 2.912217,
       "currentPrice": 2.700585,
-      "previousPrice": 2.933679,
+      "previousPrice": 2.700585,
       "priceDate": "2026-09-17",
-      "previousPriceDate": "2026-09-15",
+      "previousPriceDate": "2026-09-17",
       "cost": 5597.28,
       "value": 5190.52,
       "profit": -406.76,
       "profitPercent": -7.267,
-      "dailyProfit": -448.01,
-      "dailyProfitPercent": -7.9455
+      "dailyProfit": 0.0,
+      "dailyProfitPercent": 0.0
     }
   },
   "summary": {
@@ -38,7 +38,7 @@
     "totalValue": 149516.06,
     "totalProfit": 9604.18,
     "totalProfitPercent": 6.8644,
-    "dailyProfit": -448.01,
-    "dailyProfitPercent": -0.2987
+    "dailyProfit": 0.0,
+    "dailyProfitPercent": 0.0
   }
 }
