@@ -1,44 +1,44 @@
 {
   "currency": "TRY",
-  "updatedAt": "2026-09-21T13:12:01.955378",
+  "updatedAt": "2026-09-21T13:28:36.689073",
   "assets": {
     "TLY": {
       "code": "TLY",
       "quantity": 14,
       "avgCost": 9593.9,
       "currentPrice": 10308.967128,
-      "previousPrice": 10308.967128,
+      "previousPrice": 10133.510887,
       "priceDate": "2026-09-16",
-      "previousPriceDate": "2026-09-16",
+      "previousPriceDate": "2026-09-15",
       "cost": 134314.6,
       "value": 144325.54,
       "profit": 10010.94,
       "profitPercent": 7.4534,
-      "dailyProfit": 0.0,
-      "dailyProfitPercent": 0.0
+      "dailyProfit": 2456.39,
+      "dailyProfitPercent": 1.7314
     },
     "THF": {
       "code": "THF",
       "quantity": 1922,
       "avgCost": 2.912217,
-      "currentPrice": 2.700585,
-      "previousPrice": 2.933679,
-      "priceDate": "2026-09-17",
-      "previousPriceDate": "2026-09-15",
+      "currentPrice": 1.905261,
+      "previousPrice": 2.700585,
+      "priceDate": "2026-09-21",
+      "previousPriceDate": "2026-09-17",
       "cost": 5597.28,
-      "value": 5190.52,
-      "profit": -406.76,
-      "profitPercent": -7.267,
-      "dailyProfit": -448.01,
-      "dailyProfitPercent": -7.9455
+      "value": 3661.91,
+      "profit": -1935.37,
+      "profitPercent": -34.577,
+      "dailyProfit": -1528.61,
+      "dailyProfitPercent": -29.4501
     }
   },
   "summary": {
     "totalCost": 139911.88,
-    "totalValue": 149516.06,
-    "totalProfit": 9604.18,
-    "totalProfitPercent": 6.8644,
-    "dailyProfit": -448.01,
-    "dailyProfitPercent": -0.2987
+    "totalValue": 147987.45,
+    "totalProfit": 8075.57,
+    "totalProfitPercent": 5.7719,
+    "dailyProfit": 927.78,
+    "dailyProfitPercent": 0.6309
   }
 }
